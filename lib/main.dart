@@ -31,7 +31,7 @@ class AppEntry extends ConsumerWidget {
         appBarTheme: const AppBarTheme(
           backgroundColor: Color(0xff1A1A1A),
         ),
-        useMaterial3: true,
+        // useMaterial3: true,
       ),
       home: const App(),
       // routerConfig: ref.watch(routerManagerProvider),
