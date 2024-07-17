@@ -1,0 +1,4 @@
+enum CategoryModel {
+  course,
+  lecture,
+}
