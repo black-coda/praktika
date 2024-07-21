@@ -10,17 +10,18 @@ import 'package:myapp/utils/toast/toast_manager.dart';
 
 import 'widget/input_widget.dart';
 
-class LoginView extends ConsumerStatefulWidget {
-  const LoginView({super.key});
+class RegisterView extends ConsumerStatefulWidget {
+  const RegisterView({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _LoginViewState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _RegisterViewState();
 }
 
-class _LoginViewState extends ConsumerState<LoginView>
+class _RegisterViewState extends ConsumerState<RegisterView>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   late TextEditingController emailController;
   late TextEditingController passwordController;
+  late TextEditingController usernameController;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
@@ -29,6 +30,7 @@ class _LoginViewState extends ConsumerState<LoginView>
     WidgetsBinding.instance.addObserver(this);
     emailController = TextEditingController();
     passwordController = TextEditingController();
+    usernameController = TextEditingController();
   }
 
   @override
@@ -36,6 +38,7 @@ class _LoginViewState extends ConsumerState<LoginView>
     WidgetsBinding.instance.removeObserver(this);
     emailController.dispose();
     passwordController.dispose();
+    usernameController.dispose();
     super.dispose();
   }
 
@@ -58,7 +61,7 @@ class _LoginViewState extends ConsumerState<LoginView>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Hello\nagain!",
+                    "Create\naccount",
                     style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -69,6 +72,9 @@ class _LoginViewState extends ConsumerState<LoginView>
                     height: MediaQuery.sizeOf(context).height * 0.1,
                   ),
                   InputField(formName: "Email", controller: emailController),
+                  const SizedBox(height: 16),
+                  InputField(
+                      formName: "Username", controller: usernameController),
                   const SizedBox(height: 16),
                   InputField(
                       formName: "Password", controller: passwordController),
@@ -82,19 +88,20 @@ class _LoginViewState extends ConsumerState<LoginView>
                         onPressed: () async {
                           if (formKey.currentState!.validate()) {
                             final model = AuthDTO(
-                                email: emailController.text,
-                                password: passwordController.text);
+                              email: emailController.text,
+                              password: passwordController.text,
+                              username: usernameController.text,
+                            );
                             final msg = await ref
                                 .read(authStateNotifierProvider.notifier)
-                                .loginWithEmailAndPassword(model);
+                                .registerWithEmailAndPassword(model);
                             switch (msg) {
                               case Success():
-                                ToastManager()
-                                    .showToast(context, "Login successful 🥰");
+                                ToastManager().showToast(
+                                    context, "Account create successful 🥰");
 
                               case Error():
-                                ToastManager()
-                                    .showToast(context, "Login failed 😢");
+                                ToastManager().showToast(context, "Failure 😢");
                             }
                           }
                         },
@@ -107,19 +114,19 @@ class _LoginViewState extends ConsumerState<LoginView>
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(24)),
                             backgroundColor: const Color(0xffF5F378)),
-                        child: const Text("Log in")),
+                        child: const Text("Create an account")),
                   ),
-                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.2),
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, RouterManager.registerRoute);
+                      Navigator.pushNamed(context, RouterManager.loginRoute);
                     },
                     child: RichText(
                       textAlign: TextAlign.center,
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: "Sign up  >",
+                            text: "Sign in >",
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyMedium
@@ -130,7 +137,7 @@ class _LoginViewState extends ConsumerState<LoginView>
                                 ),
                           ),
                         ],
-                        text: "Don't have an account? \n",
+                        text: "Already have an account? \n",
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               color: Colors.white,
                             ),

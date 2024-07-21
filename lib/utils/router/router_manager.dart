@@ -1,9 +1,12 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:myapp/app/view/screens/dashboard_screen.dart';
+import 'package:myapp/authentication/view/login_view.dart';
+import 'package:myapp/authentication/view/register_view.dart';
+import 'package:myapp/user/view/profile.dart';
 
 final routerManagerProvider = Provider<GoRouter>(
-
-  
   (ref) {
     return GoRouter(
       routes: [
@@ -31,4 +34,39 @@ class RouterManager {
   static const String homeRoute = '/home';
   static const String onboardView = 'onboard';
   static const String onboardRoute = '/onboard';
+  static const String registerView = 'register';
+  static const String registerRoute = '/register';
+  static const String userProfileView = 'userProfile';
+  static const String userProfileRoute = '/userProfile';
+}
+
+class MaterialRouteManager {
+  static Route<dynamic> generateRoute(RouteSettings settings) {
+    switch (settings.name) {
+      case RouterManager.loginRoute:
+        return MaterialPageRoute(
+          
+          builder: (context) => const LoginView(),
+        );
+      case RouterManager.registerRoute:
+        return MaterialPageRoute(
+          builder: (context) => const RegisterView(),
+        );
+      case RouterManager.homeRoute:
+        return MaterialPageRoute(
+          builder: (context) => const DashboardView(),
+        );
+      case RouterManager.onboardRoute:
+        return MaterialPageRoute(
+          builder: (context) => const LoginView(),
+        );
+      case RouterManager.userProfileRoute:
+        return MaterialPageRoute(
+          builder: (context) => const UserProfileView(),
+        );
+
+      default:
+        throw const FormatException();
+    }
+  }
 }

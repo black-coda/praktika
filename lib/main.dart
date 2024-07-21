@@ -5,7 +5,8 @@ import 'package:myapp/utils/router/router_manager.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app/view/screens/dashboard_screen.dart';
-import 'authentication/controller/supabse_provider.dart';
+import 'authentication/controller/supabase_provider.dart';
+import 'authentication/view/login_view.dart';
 
 void main() async {
   await Supabase.initialize(
@@ -34,7 +35,45 @@ class AppEntry extends ConsumerWidget {
         // useMaterial3: true,
       ),
       home: const App(),
-      // routerConfig: ref.watch(routerManagerProvider),
+      onGenerateRoute: MaterialRouteManager.generateRoute,
+    );
+  }
+}
+
+class App extends ConsumerWidget {
+  const App({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authStateAsyncValue = ref.watch(authStreamProvider);
+
+    return authStateAsyncValue.when(
+      data: (authState) {
+        if (authState.event == AuthChangeEvent.signedIn ||
+            (authState.event == AuthChangeEvent.initialSession &&
+                authState.session != null)) {
+          return const DashboardView();
+        } else {
+          return const LoginView();
+        }
+      },
+      error: (error, stackTrace) {
+        return Scaffold(
+          body: Center(
+            child: Text(
+              error.toString(),
+              style: const TextStyle(color: Colors.red),
+            ),
+          ),
+        );
+      },
+      loading: () {
+        return const Scaffold(
+          body: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      },
     );
   }
 }

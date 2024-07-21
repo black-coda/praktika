@@ -1,13 +1,23 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:developer';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:myapp/authentication/controller/supabse_provider.dart';
+import 'package:myapp/authentication/controller/supabase_provider.dart';
 import 'package:myapp/authentication/model/auth_dto.dart';
+import 'package:myapp/utils/constant/constant.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-enum AuthResult {
-  success,
-  error,
-  aborted,
+sealed class AuthResult {}
+
+class Success implements AuthResult {
+  final String msg;
+
+  Success({required this.msg});
+}
+
+class Error implements AuthResult {
+  final String msg;
+
+  Error({required this.msg});
 }
 
 class AuthState {
@@ -36,7 +46,29 @@ class Authenticator {
 
   Authenticator({required this.ref});
 
+
+  Future<void> logout() async {
+    try {
+      final supabaseClient = ref.read(supabaseProvider);
+      await supabaseClient.auth.signOut();
+    } on AuthException {
+      rethrow;
+    }
+  }
+
   Future<void> loginWithEmailAndPassword(AuthDTO model) async {
+    try {
+      final supabaseClient = ref.read(supabaseProvider);
+      await supabaseClient.auth.signInWithPassword(
+        email: model.email,
+        password: model.password,
+      );
+    } on AuthException {
+      rethrow;
+    }
+  }
+
+  Future<void> registerWithEmailAndPassword(AuthDTO model) async {
     try {
       final supabaseClient = ref.read(supabaseProvider);
       await supabaseClient.auth.signUp(
@@ -51,7 +83,9 @@ class Authenticator {
 }
 
 class AuthStateNotifier extends StateNotifier<AuthState> {
-  AuthStateNotifier(this.authenticator) : super(AuthState.defaultState());
+  AuthStateNotifier(this.authenticator, this.ref)
+      : super(AuthState.defaultState());
+  final Ref ref;
 
   final Authenticator authenticator;
 
@@ -63,11 +97,40 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
     try {
       setIsLoading(true);
       await authenticator.loginWithEmailAndPassword(model);
-      return AuthResult.success;
-    } catch (e) {
-      return AuthResult.error;
+      return Success(msg: "login successful 🥰");
+    } on AuthException catch (e) {
+      log(e.message);
+      return Error(msg: "${e.statusCode}: ${e.message}");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  Future<AuthResult> registerWithEmailAndPassword(AuthDTO model) async {
+    try {
+      setIsLoading(true);
+      await authenticator.registerWithEmailAndPassword(model);
+      await ref.watch(supabaseProvider).from(Constant.userTable).insert({
+        "email": model.email,
+        "username": model.username,
+      });
+      return Success(msg: "account created successful 🥰");
+    } on AuthException catch (e) {
+      return Error(msg: "${e.statusCode}: ${e.message}");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  Future<void> logout() async {
+    try {
+      setIsLoading(true);
+      await authenticator.logout();
+    } on AuthException catch (e) {
+      log(e.message);
     } finally {
       setIsLoading(false);
     }
   }
 }
+

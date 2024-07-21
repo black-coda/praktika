@@ -3,24 +3,90 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:myapp/app/controllers/fetch_courses_controller.dart';
 import 'package:myapp/app/model/course_model.dart';
 import 'package:myapp/app/view/widgets/chip.dart';
+import 'package:myapp/utils/router/router_manager.dart';
 
-class DashboardScreen extends ConsumerWidget {
-  const DashboardScreen({super.key});
+class DashboardView extends ConsumerStatefulWidget {
+  const DashboardView({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<DashboardView> createState() => _DashboardViewState();
+}
+
+class _DashboardViewState extends ConsumerState<DashboardView> {
+  @override
+  Widget build(BuildContext context) {
     final courseModel = ref.watch(fetchCoursesProvider);
     return Scaffold(
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 16.0),
+        child: Container(
+          height: 64,
+          decoration: const BoxDecoration(
+            color: Color(0xff2F2F2F),
+            borderRadius: BorderRadius.all(Radius.circular(30)),
+          ),
+          child: Material(
+            elevation: 0.0,
+            color: const Color(0xff2F2F2F),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30.0)),
+            child: BottomNavigationBar(
+              selectedItemColor: const Color(0xffFFFFFF),
+              unselectedItemColor: const Color(0xff6C6C6C),
+              unselectedFontSize: 10,
+              selectedFontSize: 12,
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              type: BottomNavigationBarType.fixed,
+              items: const <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home_outlined),
+                  backgroundColor: Colors.transparent,
+                  label: 'Home',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.search),
+                  label: 'Search',
+                  backgroundColor: Colors.transparent,
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.lightbulb_outline_rounded,
+                  ),
+                  label: 'Learning',
+                  backgroundColor: Colors.transparent,
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.work_outline_rounded),
+                  label: 'Home',
+                  backgroundColor: Colors.transparent,
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person_outline_outlined),
+                  label: 'Profile',
+                  backgroundColor: Colors.transparent,
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16),
           child: CustomScrollView(
             slivers: [
               SliverAppBar(
-                leading: const CircleAvatar(
-                    maxRadius: 15,
-                    foregroundImage: NetworkImage(
-                        "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671116.jpg?w=826&t=st=1717727695~exp=1717728295~hmac=ec1f2b2f76d8254081ea5a1a2bda88801ec3a11cef9f6282030b5ed61c983c19")),
+                leading: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context)
+                        .pushNamed(RouterManager.userProfileRoute);
+                  },
+                  child: const CircleAvatar(
+                      maxRadius: 15,
+                      foregroundImage: NetworkImage(
+                          "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671116.jpg?w=826&t=st=1717727695~exp=1717728295~hmac=ec1f2b2f76d8254081ea5a1a2bda88801ec3a11cef9f6282030b5ed61c983c19")),
+                ),
                 title: Text("Hello,Johanna",
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                         color: const Color(0xffDCC1FF),
