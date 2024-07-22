@@ -23,12 +23,34 @@ class _LoginViewState extends ConsumerState<LoginView>
   late TextEditingController passwordController;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
+  //! animation controller
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+  late Animation<double> _opacityAnimation;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     emailController = TextEditingController();
     passwordController = TextEditingController();
+
+    //! animation controller
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 3),
+    )..repeat(reverse: true);
+
+    // _animation = CurvedAnimation(
+    //   parent: _animationController,
+    //   curve: Curves.bounceInOut,
+    // );
+
+    _animation = Tween<double>(begin: 50, end: 0).animate(_animationController);
+    _opacityAnimation =
+        Tween<double>(begin: 0, end: 1).animate(_animationController);
+
+    _animationController.forward();
   }
 
   @override
@@ -36,6 +58,7 @@ class _LoginViewState extends ConsumerState<LoginView>
     WidgetsBinding.instance.removeObserver(this);
     emailController.dispose();
     passwordController.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -57,13 +80,30 @@ class _LoginViewState extends ConsumerState<LoginView>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    "Hello\nagain!",
-                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                  AnimatedBuilder(
+                    animation: _animation,
+                    // child: child,
+                    builder: (BuildContext context, Widget? child) {
+                      // log(_animation.value.toString());
+                      return Transform.translate(
+                        offset: Offset(0, _animation.value),
+                        child: AnimatedOpacity(
+                          opacity: _opacityAnimation.value,
+                          duration: const Duration(seconds: 3),
+                          child: Text(
+                            "Hello\nagain!",
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineLarge
+                                ?.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
-                    textAlign: TextAlign.center,
+                      );
+                    },
                   ),
                   SizedBox(
                     height: MediaQuery.sizeOf(context).height * 0.1,
@@ -93,8 +133,7 @@ class _LoginViewState extends ConsumerState<LoginView>
                                     .showToast(context, "Login successful 🥰");
 
                               case Error():
-                                ToastManager()
-                                    .showToast(context, "Login failed 😢");
+                                ToastManager().showToast(context, msg.msg);
                             }
                           }
                         },

@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:myapp/authentication/controller/supabase_provider.dart';
@@ -45,7 +46,6 @@ class Authenticator {
   final Ref ref;
 
   Authenticator({required this.ref});
-
 
   Future<void> logout() async {
     try {
@@ -98,6 +98,9 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
       setIsLoading(true);
       await authenticator.loginWithEmailAndPassword(model);
       return Success(msg: "login successful 🥰");
+    } on SocketException catch (e) {
+      log(e.toString());
+      return Error(msg: "No internet available 🤌");
     } on AuthException catch (e) {
       log(e.message);
       return Error(msg: "${e.statusCode}: ${e.message}");
@@ -133,4 +136,3 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
     }
   }
 }
-
