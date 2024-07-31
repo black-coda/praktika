@@ -38,7 +38,7 @@ class _LoginViewState extends ConsumerState<LoginView>
     //! animation controller
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 3),
+      duration: const Duration(seconds: 1),
     )..repeat(reverse: true);
 
     // _animation = CurvedAnimation(
@@ -122,8 +122,8 @@ class _LoginViewState extends ConsumerState<LoginView>
                         onPressed: () async {
                           if (formKey.currentState!.validate()) {
                             final model = AuthDTO(
-                                email: emailController.text,
-                                password: passwordController.text);
+                                email: emailController.text.trim(),
+                                password: passwordController.text.trim());
                             final msg = await ref
                                 .read(authStateNotifierProvider.notifier)
                                 .loginWithEmailAndPassword(model);

@@ -88,9 +88,9 @@ class _RegisterViewState extends ConsumerState<RegisterView>
                         onPressed: () async {
                           if (formKey.currentState!.validate()) {
                             final model = AuthDTO(
-                              email: emailController.text,
-                              password: passwordController.text,
-                              username: usernameController.text,
+                              email: emailController.text.trim(),
+                              password: passwordController.text.trim(),
+                              username: usernameController.text.trim(),
                             );
                             final msg = await ref
                                 .read(authStateNotifierProvider.notifier)

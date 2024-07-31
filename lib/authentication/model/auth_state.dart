@@ -103,7 +103,7 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
       return Error(msg: "No internet available 🤌");
     } on AuthException catch (e) {
       log(e.message);
-      return Error(msg: "${e.statusCode}: ${e.message}");
+      return Error(msg: e.message);
     } finally {
       setIsLoading(false);
     }

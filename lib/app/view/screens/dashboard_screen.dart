@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:myapp/app/controllers/bottom_navbar_controller/btn_nav_controller.dart';
 import 'package:myapp/app/controllers/fetch_courses_controller.dart';
 import 'package:myapp/app/model/course_model.dart';
+import 'package:myapp/app/view/widgets/bottom_nav_bar.dart';
 import 'package:myapp/app/view/widgets/chip.dart';
 import 'package:myapp/utils/router/router_manager.dart';
 
@@ -15,7 +17,7 @@ class DashboardView extends ConsumerStatefulWidget {
 class _DashboardViewState extends ConsumerState<DashboardView> {
   @override
   Widget build(BuildContext context) {
-    final courseModel = ref.watch(fetchCoursesProvider);
+    final index = ref.watch(indexProvider);
     return Scaffold(
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 16.0),
@@ -30,124 +32,99 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
             color: const Color(0xff2F2F2F),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30.0)),
-            child: BottomNavigationBar(
-              selectedItemColor: const Color(0xffFFFFFF),
-              unselectedItemColor: const Color(0xff6C6C6C),
-              unselectedFontSize: 10,
-              selectedFontSize: 12,
-              elevation: 0,
-              backgroundColor: Colors.transparent,
-              type: BottomNavigationBarType.fixed,
-              items: const <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home_outlined),
-                  backgroundColor: Colors.transparent,
-                  label: 'Home',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.search),
-                  label: 'Search',
-                  backgroundColor: Colors.transparent,
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.lightbulb_outline_rounded,
-                  ),
-                  label: 'Learning',
-                  backgroundColor: Colors.transparent,
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.work_outline_rounded),
-                  label: 'Home',
-                  backgroundColor: Colors.transparent,
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person_outline_outlined),
-                  label: 'Profile',
-                  backgroundColor: Colors.transparent,
-                )
-              ],
-            ),
+            child: const BottomNavBar(),
           ),
         ),
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16),
-          child: CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                leading: GestureDetector(
-                  onTap: () {
-                    Navigator.of(context)
-                        .pushNamed(RouterManager.userProfileRoute);
-                  },
-                  child: const CircleAvatar(
-                      maxRadius: 15,
-                      foregroundImage: NetworkImage(
-                          "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671116.jpg?w=826&t=st=1717727695~exp=1717728295~hmac=ec1f2b2f76d8254081ea5a1a2bda88801ec3a11cef9f6282030b5ed61c983c19")),
-                ),
-                title: Text("Hello,Johanna",
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        color: const Color(0xffDCC1FF),
-                        fontSize: 20,
-                        fontWeight: FontWeight.w400)),
-                actions: const [
-                  Icon(
-                    Icons.notification_important_outlined,
-                    color: Color(0xff6C6C6C),
-                  )
-                ],
+      body: ref.watch(navBarScreenProvider(index)),
+    );
+  }
+}
+
+class DashboardEntryScreen extends ConsumerWidget {
+  const DashboardEntryScreen({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final courseModel = ref.watch(fetchCoursesProvider);
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16),
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              leading: GestureDetector(
+                onTap: () {
+                  Navigator.of(context)
+                      .pushNamed(RouterManager.userProfileRoute);
+                },
+                child: const CircleAvatar(
+                    maxRadius: 15,
+                    foregroundImage: NetworkImage(
+                        "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671116.jpg?w=826&t=st=1717727695~exp=1717728295~hmac=ec1f2b2f76d8254081ea5a1a2bda88801ec3a11cef9f6282030b5ed61c983c19")),
               ),
-              const SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12),
-                  child: Wrap(
-                    spacing: 4.0,
-                    runSpacing: 0.0,
+              title: Text("Hello,Johanna",
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      color: const Color(0xffDCC1FF),
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400)),
+              actions: const [
+                Icon(
+                  Icons.notification_important_outlined,
+                  color: Color(0xff6C6C6C),
+                )
+              ],
+            ),
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 12),
+                child: Wrap(
+                  spacing: 4.0,
+                  runSpacing: 0.0,
+                  children: [
+                    ChipWidget(text: "UI/UX"),
+                    ChipWidget(text: "Illustrations"),
+                    ChipWidget(text: "Graphic Design"),
+                    ChipWidget(text: "Marketing"),
+                    ChipWidget(text: "Business"),
+                    ChipWidget(text: "Web development"),
+                    ChipWidget(text: "Mobile development"),
+                  ],
+                ),
+              ),
+            ),
+            courseModel.when(
+              data: (courses) {
+                return SliverToBoxAdapter(
+                  child: ItemCard(courseModel: courses),
+                );
+              },
+              error: (_, __) {
+                return SliverToBoxAdapter(
+                  child: Column(
                     children: [
-                      ChipWidget(text: "UI/UX"),
-                      ChipWidget(text: "Illustrations"),
-                      ChipWidget(text: "Graphic Design"),
-                      ChipWidget(text: "Marketing"),
-                      ChipWidget(text: "Business"),
-                      ChipWidget(text: "Web development"),
-                      ChipWidget(text: "Mobile development"),
+                      const Center(
+                        child: Text("Error 🤔"),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          ref.invalidate(fetchCoursesProvider);
+                        },
+                        child: const Text("Retry"),
+                      )
                     ],
                   ),
+                );
+              },
+              loading: () => const SliverToBoxAdapter(
+                child: Center(
+                  child: CircularProgressIndicator(),
                 ),
               ),
-              courseModel.when(
-                data: (courses) {
-                  return SliverToBoxAdapter(
-                    child: ItemCard(courseModel: courses),
-                  );
-                },
-                error: (_, __) {
-                  return SliverToBoxAdapter(
-                    child: Column(
-                      children: [
-                        const Center(
-                          child: Text("Error 🤔"),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            ref.invalidate(fetchCoursesProvider);
-                          },
-                          child: const Text("Retry"),
-                        )
-                      ],
-                    ),
-                  );
-                },
-                loading: () => const SliverToBoxAdapter(
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
-              )
-            ],
-          ),
+            )
+          ],
         ),
       ),
     );
