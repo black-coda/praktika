@@ -10,3 +10,9 @@ final authStateNotifierProvider =
   final authenticator = ref.watch(authenticatorProvider);
   return AuthStateNotifier(authenticator, ref);
 });
+
+
+final authLoadingStateProvider = Provider<bool>((ref) {
+  final authState = ref.watch(authStateNotifierProvider);
+  return authState.isLoading;
+});

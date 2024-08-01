@@ -21,6 +21,6 @@ class UserProfilesBackend {
   }
 }
 
-final userProfileBackendProvider = FutureProvider<Map<String,dynamic>>((ref) {
-  return UserProfilesBackend(ref).getUserDetails();
+final userProfileBackendFutureProvider = FutureProvider<Map<String,dynamic>>((ref) async {
+  return await UserProfilesBackend(ref).getUserDetails();
 });

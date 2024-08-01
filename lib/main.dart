@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:myapp/authentication/controller/auth_controller.dart';
 import 'package:myapp/utils/router/router_manager.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app/view/screens/dashboard_screen.dart';
 import 'authentication/controller/supabase_provider.dart';
 import 'authentication/view/login_view.dart';
+import 'utils/loader/loading_screen_widget.dart';
 
 void main() async {
   await Supabase.initialize(
@@ -34,7 +36,23 @@ class AppEntry extends ConsumerWidget {
         ),
         // useMaterial3: true,
       ),
-      home: const App(),
+      home: Consumer(
+        builder: (context, ref, child) {
+          ref.listen<bool>(authLoadingStateProvider, (previous, next) {
+            if (next) {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) =>
+                    LoadScreenWidget(isLoading: true, child: Container()),
+              );
+            } else {
+              Navigator.of(context, rootNavigator: true).pop();
+            }
+          });
+          return const App();
+        },
+      ),
       onGenerateRoute: MaterialRouteManager.generateRoute,
     );
   }

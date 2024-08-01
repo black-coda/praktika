@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:myapp/authentication/controller/auth_controller.dart';
 import 'package:myapp/authentication/model/auth_dto.dart';
 import 'package:myapp/authentication/model/auth_state.dart';
+import 'package:myapp/utils/constant/constant.dart';
 import 'package:myapp/utils/router/router_manager.dart';
 import 'package:myapp/utils/toast/toast_manager.dart';
 
@@ -76,7 +77,7 @@ class _LoginViewState extends ConsumerState<LoginView>
           key: formKey,
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
+              padding: Constant.scaffoldPadding,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
