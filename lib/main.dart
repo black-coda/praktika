@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myapp/authentication/controller/auth_controller.dart';
+import 'package:myapp/key.dart';
 import 'package:myapp/utils/router/router_manager.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
 import 'app/view/screens/dashboard_screen.dart';
 import 'authentication/controller/supabase_provider.dart';
 import 'authentication/view/login_view.dart';
@@ -12,9 +12,8 @@ import 'utils/loader/loading_screen_widget.dart';
 
 void main() async {
   await Supabase.initialize(
-    url: 'https://wtwjpaqdemodwqbobosx.supabase.co',
-    anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0d2pwYXFkZW1vZHdxYm9ib3N4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjEyMjc1ODYsImV4cCI6MjAzNjgwMzU4Nn0.iXxczNo2brN3i8xLoZ1agec-5cNvajvn4HVOmdyFWNA',
+    url: HiddenKey.url,
+    anonKey: HiddenKey.anonKey,
   );
   runApp(const ProviderScope(child: AppEntry()));
 }
