@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:myapp/authentication/controller/auth_controller.dart';
 import 'package:myapp/authentication/controller/supabase_provider.dart';
@@ -52,13 +53,14 @@ class _UserProfileViewState extends ConsumerState<UserProfileView> {
                     children: [
                       const CircleAvatar(
                           maxRadius: 60,
-                          foregroundImage: NetworkImage(
-                              "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671116.jpg?w=826&t=st=1717727695~exp=1717728295~hmac=ec1f2b2f76d8254081ea5a1a2bda88801ec3a11cef9f6282030b5ed61c983c19")),
+                          foregroundImage:
+                              NetworkImage(Constant.defaultProfileImage)),
                       const SizedBox(height: 16),
                       Text(
                         value['username'].toString().toUpperCase(),
                         style: const TextStyle(color: Colors.white),
                       ),
+                      SpacerConstant.sizedBox24,
                       //* subscription card
                       Container(
                         height: MediaQuery.of(context).size.height * 0.2,
@@ -66,11 +68,70 @@ class _UserProfileViewState extends ConsumerState<UserProfileView> {
                           color: Color(0xffF5F378),
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                         ),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 12),
+                        child: Row(
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "Your subscription\n is active until\n 12/01/2024",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 20),
+                                SizedBox(
+                                  width: 100,
+                                  child: ElevatedButton(
+                                    onPressed: () {},
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color(0xff171717),
+                                      foregroundColor: Colors.white,
+                                    ),
+                                    child: const Text("Edit"),
+                                  ),
+                                )
+                              ],
+                            ),
+                            Expanded(
+                              child: Image.asset(
+                                "assets/sub.png",
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      //* edit profile
-                      //* settings
-                      //* support
-                      //* about app
+                      SpacerConstant.sizedBox8,
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.3,
+                        child: ListView(
+                          shrinkWrap: true,
+                          children: [
+                            //* Edit profile
+                            ProfileTile(title: "Edit Profile", onTap: () {
+                              // TODO: coonfigure functionality
+                            },),
+                            //* Settings
+                            ProfileTile(title: "Settings", onTap: () {
+                              // TODO: coonfigure functionality
+                            },),
+                            //* Support
+                            ProfileTile(title: "Support", onTap: () {
+                              // TODO: coonfigure functionality
+                            },),
+                            //* About app
+                            ProfileTile(title: "About App", onTap: () {
+                              // TODO: coonfigure functionality
+                            },),
+                          ],
+                        ),
+                      ),
+                      
                       TextButton.icon(
                         onPressed: () async {
                           await ref
@@ -108,6 +169,30 @@ class _UserProfileViewState extends ConsumerState<UserProfileView> {
             ),
           ),
       },
+    );
+  }
+}
+
+class ProfileTile extends StatelessWidget {
+  const ProfileTile({
+    super.key,
+    required this.title,
+    required this.onTap,
+  });
+
+  final String title;
+  final void Function() onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(title, style: const TextStyle(color: Colors.white)),
+      trailing: const Icon(
+        Icons.arrow_forward_ios,
+        color: Colors.white,
+        size: 24,
+      ),
+      onTap: onTap,
     );
   }
 }

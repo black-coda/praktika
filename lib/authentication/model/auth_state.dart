@@ -71,10 +71,16 @@ class Authenticator {
   Future<void> registerWithEmailAndPassword(AuthDTO model) async {
     try {
       final supabaseClient = ref.read(supabaseProvider);
+      log(model.username!);
+      log(model.fullName!);
       await supabaseClient.auth.signUp(
         email: model.email,
         password: model.password,
-        data: {'username': model.username},
+        data: {
+          'username': model.username,
+          "full_name": model.fullName,
+          "avatar_url": '',
+        },
       );
     } on AuthException {
       rethrow;
@@ -113,12 +119,13 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
     try {
       setIsLoading(true);
       await authenticator.registerWithEmailAndPassword(model);
-      await ref.watch(supabaseProvider).from(Constant.userTable).insert({
-        "email": model.email,
-        "username": model.username,
-      });
+      // await ref.watch(supabaseProvider).from(Constant.userTable).insert({
+      //   "email": model.email,
+      //   "username": model.username,
+      // });
       return Success(msg: "account created successful 🥰");
     } on AuthException catch (e) {
+      log(e.message, name: "Registration AuthException");
       return Error(msg: "${e.statusCode}: ${e.message}");
     } finally {
       setIsLoading(false);

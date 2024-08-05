@@ -110,7 +110,7 @@ class _LoginViewState extends ConsumerState<LoginView>
                     height: MediaQuery.sizeOf(context).height * 0.1,
                   ),
                   InputField(formName: "Email", controller: emailController),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 20),
                   InputField(
                       formName: "Password", controller: passwordController),
                   SizedBox(

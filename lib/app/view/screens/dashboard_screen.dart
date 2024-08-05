@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:myapp/app/controllers/bottom_navbar_controller/btn_nav_controller.dart';
@@ -5,6 +7,9 @@ import 'package:myapp/app/controllers/fetch_courses_controller.dart';
 import 'package:myapp/app/model/course_model.dart';
 import 'package:myapp/app/view/widgets/bottom_nav_bar.dart';
 import 'package:myapp/app/view/widgets/chip.dart';
+import 'package:myapp/user/view_models/user_profiles_backend.dart';
+import 'package:myapp/utils/constant/constant.dart';
+import 'package:myapp/utils/loader/simmer_text.dart';
 import 'package:myapp/utils/router/router_manager.dart';
 
 class DashboardView extends ConsumerStatefulWidget {
@@ -49,6 +54,7 @@ class DashboardEntryScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final courseModel = ref.watch(fetchCoursesProvider);
+
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16),
@@ -62,14 +68,37 @@ class DashboardEntryScreen extends ConsumerWidget {
                 },
                 child: const CircleAvatar(
                     maxRadius: 15,
-                    foregroundImage: NetworkImage(
-                        "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671116.jpg?w=826&t=st=1717727695~exp=1717728295~hmac=ec1f2b2f76d8254081ea5a1a2bda88801ec3a11cef9f6282030b5ed61c983c19")),
+                    foregroundImage:
+                        NetworkImage(Constant.defaultProfileImage)),
               ),
-              title: Text("Hello,Johanna",
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      color: const Color(0xffDCC1FF),
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400)),
+              title: Consumer(
+                builder: (context, ref, child) {
+                  final userDetails =
+                      ref.watch(userProfileBackendFutureProvider);
+                  return userDetails.when(
+                    data: (data) {
+                      return Text("Hello, ${data['username']}",
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall
+                              ?.copyWith(
+                                  color: const Color(0xffDCC1FF),
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w400));
+                    },
+                    loading: () {
+                      return const ShimmerText("Loading...",
+                          style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w400));
+                    },
+                    error: (_, __) {
+                      return const Text(
+                        "Error fetching user data",
+                        style: TextStyle(color: Colors.white),
+                      );
+                    },
+                  );
+                },
+              ),
               actions: const [
                 Icon(
                   Icons.notification_important_outlined,

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -39,6 +41,7 @@ class ErrorView extends ConsumerWidget {
               ElevatedButton.icon(
                 onPressed: () {
                   ref.invalidate(providerClass);
+                  log("Provider invalidated", name: "ErrorView");
                 },
                 label: const Text("Retry"),
                 icon: const Icon(Icons.refresh),

@@ -36,6 +36,7 @@ dependencies:
   go_router: ^14.2.1
   google_fonts: ^6.2.1
   json_annotation: ^4.9.0
+  shimmer: ^3.0.0
   supabase_flutter: ^2.5.8
 
 dev_dependencies:

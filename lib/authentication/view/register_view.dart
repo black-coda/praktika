@@ -23,6 +23,7 @@ class _RegisterViewState extends ConsumerState<RegisterView>
   late TextEditingController emailController;
   late TextEditingController passwordController;
   late TextEditingController usernameController;
+  late TextEditingController fullNameController;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
@@ -32,6 +33,7 @@ class _RegisterViewState extends ConsumerState<RegisterView>
     emailController = TextEditingController();
     passwordController = TextEditingController();
     usernameController = TextEditingController();
+    fullNameController = TextEditingController();
   }
 
   @override
@@ -40,6 +42,7 @@ class _RegisterViewState extends ConsumerState<RegisterView>
     emailController.dispose();
     passwordController.dispose();
     usernameController.dispose();
+    fullNameController.dispose();
     super.dispose();
   }
 
@@ -70,9 +73,12 @@ class _RegisterViewState extends ConsumerState<RegisterView>
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(
-                    height: MediaQuery.sizeOf(context).height * 0.1,
+                    height: MediaQuery.sizeOf(context).height * 0.08,
                   ),
                   InputField(formName: "Email", controller: emailController),
+                  const SizedBox(height: 16),
+                  InputField(
+                      formName: "Full Name", controller: fullNameController),
                   const SizedBox(height: 16),
                   InputField(
                       formName: "Username", controller: usernameController),
@@ -80,7 +86,7 @@ class _RegisterViewState extends ConsumerState<RegisterView>
                   InputField(
                       formName: "Password", controller: passwordController),
                   SizedBox(
-                    height: MediaQuery.sizeOf(context).height * 0.1,
+                    height: MediaQuery.sizeOf(context).height * 0.08,
                   ),
                   SizedBox(
                     height: 48,
@@ -92,6 +98,7 @@ class _RegisterViewState extends ConsumerState<RegisterView>
                               email: emailController.text.trim(),
                               password: passwordController.text.trim(),
                               username: usernameController.text.trim(),
+                              fullName: fullNameController.text.trim(),
                             );
                             final msg = await ref
                                 .read(authStateNotifierProvider.notifier)
