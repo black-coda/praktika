@@ -8,6 +8,7 @@ import 'package:myapp/authentication/controller/supabase_provider.dart';
 import 'package:myapp/user/view_models/user_profiles_backend.dart';
 import 'package:myapp/utils/constant/constant.dart';
 import 'package:myapp/utils/error/view/error_view.dart';
+import 'package:myapp/utils/loader/simmer_text.dart';
 
 class UserProfileView extends ConsumerStatefulWidget {
   const UserProfileView({super.key});
@@ -113,25 +114,37 @@ class _UserProfileViewState extends ConsumerState<UserProfileView> {
                           shrinkWrap: true,
                           children: [
                             //* Edit profile
-                            ProfileTile(title: "Edit Profile", onTap: () {
-                              // TODO: coonfigure functionality
-                            },),
+                            ProfileTile(
+                              title: "Edit Profile",
+                              onTap: () {
+                                // TODO: configure functionality
+                              },
+                            ),
                             //* Settings
-                            ProfileTile(title: "Settings", onTap: () {
-                              // TODO: coonfigure functionality
-                            },),
+                            ProfileTile(
+                              title: "Settings",
+                              onTap: () {
+                                // TODO: configure functionality
+                              },
+                            ),
                             //* Support
-                            ProfileTile(title: "Support", onTap: () {
-                              // TODO: coonfigure functionality
-                            },),
+                            ProfileTile(
+                              title: "Support",
+                              onTap: () {
+                                // TODO: configure functionality
+                              },
+                            ),
                             //* About app
-                            ProfileTile(title: "About App", onTap: () {
-                              // TODO: coonfigure functionality
-                            },),
+                            ProfileTile(
+                              title: "About App",
+                              onTap: () {
+                                // TODO: configure functionality
+                              },
+                            ),
                           ],
                         ),
                       ),
-                      
+
                       TextButton.icon(
                         onPressed: () async {
                           await ref
@@ -160,13 +173,7 @@ class _UserProfileViewState extends ConsumerState<UserProfileView> {
             providerClass: userProfileBackendFutureProvider,
           ),
         _ => const Center(
-            child: Column(
-              children: [
-                Text('Loading...'),
-                SizedBox(height: 16),
-                LinearProgressIndicator(),
-              ],
-            ),
+            child: ShimmerText('Loading...'),
           ),
       },
     );
