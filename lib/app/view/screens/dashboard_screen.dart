@@ -20,6 +20,14 @@ class DashboardView extends ConsumerStatefulWidget {
 }
 
 class _DashboardViewState extends ConsumerState<DashboardView> {
+ 
+
+ @override
+  void initState() {
+    super.initState();
+    ref.read(userDetailsProvider).getUserDetails();
+  }
+
   @override
   Widget build(BuildContext context) {
     final index = ref.watch(indexProvider);
@@ -88,7 +96,10 @@ class DashboardEntryScreen extends ConsumerWidget {
                     },
                     loading: () {
                       return const ShimmerText("Loading...",
-                          style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w400));
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w400));
                     },
                     error: (_, __) {
                       return const Text(

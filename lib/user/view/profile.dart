@@ -18,11 +18,7 @@ class UserProfileView extends ConsumerStatefulWidget {
 }
 
 class _UserProfileViewState extends ConsumerState<UserProfileView> {
-  @override
-  void didChangeDependencies() async {
-    //  await ref.read(userProfileBackendProvider).getUserDetails();
-    super.didChangeDependencies();
-  }
+ 
 
   @override
   Widget build(BuildContext context) {
