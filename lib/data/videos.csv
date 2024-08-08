@@ -1,0 +1,11 @@
+id,title,price,duration,vid_category,vid_type
+1,Introduction to Flutter,25,01:30:00,Mobile development,lecture
+2,Mastering Dart,20,02:00:00,Mobile development,lecture
+3,UI/UX Design Principles,15,01:45:00,UI/UX,course
+4,Graphic Design Fundamentals,30,01:00:00,Graphic design,course
+5,Advanced Marketing Strategies,40,02:30:00,marketing,course
+6,Illustrations for Beginners,22,01:20:00,Illustrations,lecture
+7,Web Development with Django,18,01:00:00,Web development,lecture
+8,Business Growth Hacks,28,02:00:00,Business,course
+9,Creating Stunning UI/UX,35,03:00:00,UI/UX,course
+10,Mobile App Design Patterns,26,01:40:00,Mobile development,lecture

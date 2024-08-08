@@ -3,14 +3,16 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:myapp/app/controllers/bottom_navbar_controller/btn_nav_controller.dart';
-import 'package:myapp/app/controllers/fetch_courses_controller.dart';
-import 'package:myapp/app/model/course_model.dart';
 import 'package:myapp/app/view/widgets/bottom_nav_bar.dart';
 import 'package:myapp/app/view/widgets/chip.dart';
 import 'package:myapp/user/view_models/user_profiles_backend.dart';
 import 'package:myapp/utils/constant/constant.dart';
 import 'package:myapp/utils/loader/simmer_text.dart';
 import 'package:myapp/utils/router/router_manager.dart';
+import 'package:myapp/video/controller/videos_controller.dart';
+
+import '../widgets/header.dart';
+import '../widgets/video_card.dart';
 
 class DashboardView extends ConsumerStatefulWidget {
   const DashboardView({super.key});
@@ -20,9 +22,7 @@ class DashboardView extends ConsumerStatefulWidget {
 }
 
 class _DashboardViewState extends ConsumerState<DashboardView> {
- 
-
- @override
+  @override
   void initState() {
     super.initState();
     ref.read(userDetailsProvider).getUserDetails();
@@ -61,7 +61,7 @@ class DashboardEntryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final courseModel = ref.watch(fetchCoursesProvider);
+    final videos = ref.watch(videosFutureProvider);
 
     return SafeArea(
       child: Padding(
@@ -135,22 +135,43 @@ class DashboardEntryScreen extends ConsumerWidget {
                 ),
               ),
             ),
-            courseModel.when(
+            videos.when(
               data: (courses) {
                 return SliverToBoxAdapter(
-                  child: ItemCard(courseModel: courses),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const HeaderWidget("Courses"),
+                      VideoCard(
+                        videosList: ref.watch(courseVideoProvider),
+                      ),
+                      SpacerConstant.sizedBox20,
+                      const HeaderWidget("Lectures"),
+                      VideoCard(
+                        videosList: ref.watch(lectureVideoProvider),
+                      ),
+                    ],
+                  ),
                 );
               },
-              error: (_, __) {
+              error: (e, __) {
                 return SliverToBoxAdapter(
                   child: Column(
                     children: [
-                      const Center(
-                        child: Text("Error 🤔"),
+                      Center(
+                        child: Text(
+                          "Error  🤔",
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall
+                              ?.copyWith(
+                                  color: Theme.of(context).colorScheme.error),
+                        ),
                       ),
+                      SpacerConstant.sizedBox40,
                       ElevatedButton(
                         onPressed: () {
-                          ref.invalidate(fetchCoursesProvider);
+                          ref.invalidate(videosFutureProvider);
                         },
                         child: const Text("Retry"),
                       )
@@ -167,144 +188,6 @@ class DashboardEntryScreen extends ConsumerWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class ItemCard extends StatelessWidget {
-  const ItemCard({
-    super.key,
-    required this.courseModel,
-  });
-
-  final List<CourseModel> courseModel;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 170,
-      child: ListView.builder(
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: (index % 3 == 0)
-                    ? const Color(0xffEC704B)
-                    : (index % 3 == 1)
-                        ? const Color(0xffF5F378)
-                        : const Color(0xffDCC1FF),
-              ),
-              padding: const EdgeInsets.all(8),
-              width: 250,
-              child: Stack(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: 100,
-                        child: Text(
-                          courseModel[index].title,
-                          style: Theme.of(context)
-                              .textTheme
-                              .displayLarge
-                              ?.copyWith(
-                                color: const Color(0xff242424),
-                                fontWeight: FontWeight.w500,
-                                fontSize: 20,
-                              ),
-                        ),
-                      ),
-                      const Icon(Icons.favorite_border_outlined, size: 20)
-                    ],
-                  ),
-
-                  Positioned(
-                    bottom: 50,
-                    left: 0,
-                    child: Text(
-                      "${courseModel[index].price} \$",
-                      style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                            color: const Color(0xff242424),
-                            fontWeight: FontWeight.w600,
-                            fontSize: 20,
-                          ),
-                    ),
-                  ),
-
-                  Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            height: 24,
-                            width: 60,
-                            child: ChipElevatedBtn(
-                                index: index,
-                                ratings: courseModel[index].rating),
-                          ),
-                          const SizedBox(width: 4),
-                        ],
-                      )),
-
-                  // price, tags,
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    widthFactor: 0,
-                    child: SizedBox(
-                      height: 100,
-                      child: Image.asset(
-                        "assets/img_2.png",
-                        width: 150,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          );
-        },
-        itemCount: courseModel.length,
-        scrollDirection: Axis.horizontal,
-      ),
-    );
-  }
-}
-
-class ChipElevatedBtn extends StatelessWidget {
-  const ChipElevatedBtn(
-      {super.key, required this.index, required this.ratings});
-
-  final int index;
-  final String ratings;
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton.icon(
-      onPressed: () {},
-      icon: Icon(Icons.star_border_outlined,
-          size: 16,
-          color: (index % 3 == 0)
-              ? const Color(0xffEC704B)
-              : (index % 3 == 1)
-                  ? const Color(0xffF5F378)
-                  : const Color(0xffDCC1FF)),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xff2F2F2F),
-        // backgroundColor: Colors.transparent,
-        padding: EdgeInsets.zero,
-      ),
-      label: Text(ratings,
-          style: TextStyle(
-              fontSize: Theme.of(context).textTheme.labelSmall!.fontSize,
-              color: (index % 3 == 0)
-                  ? const Color(0xffEC704B)
-                  : (index % 3 == 1)
-                      ? const Color(0xffF5F378)
-                      : const Color(0xffDCC1FF))),
     );
   }
 }

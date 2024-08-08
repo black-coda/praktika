@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 class Constant {
   static const String profileTable = 'profiles';
+  static const String videoTable = 'videos';
+  static const String reviewTable = "reviews";
   static const scaffoldPadding =
       EdgeInsets.symmetric(vertical: 32, horizontal: 16);
   static const defaultProfileImage =

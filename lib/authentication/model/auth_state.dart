@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:myapp/authentication/controller/auth_controller.dart';
 import 'package:myapp/authentication/controller/supabase_provider.dart';
 import 'package:myapp/authentication/model/auth_dto.dart';
 import 'package:myapp/utils/constant/constant.dart';
@@ -50,6 +51,7 @@ class Authenticator {
   Future<void> logout() async {
     try {
       final supabaseClient = ref.read(supabaseProvider);
+      ref.invalidate(authStateNotifierProvider);
       await supabaseClient.auth.signOut();
     } on AuthException {
       rethrow;
