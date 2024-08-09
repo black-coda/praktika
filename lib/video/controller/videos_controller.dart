@@ -16,9 +16,12 @@ class VideoNotifier extends StateNotifier<List<Video>> {
   /// Returns a list of `Video` objects.
   Future<List<Video>> fetchVideosFromDB() async {
     final supabase = ref.watch(supabaseProvider);
-    final data =
-        await supabase.from(Constant.videoTable).select('*, reviews(rating)');
+    final user = supabase.auth.currentUser;
 
+    if (user == null) return [];
+    final data = await supabase
+        .from(Constant.videoTable)
+        .select('*, reviews(rating), my_learning(is_favorite)').eq("my_learning.user_id", user.id);
     final videos = data.map((e) => Video.fromMap(e)).toList();
 
     state = videos;
@@ -38,6 +41,54 @@ class VideoNotifier extends StateNotifier<List<Video>> {
     log(data.first["rating"].toString());
     return data.first["rating"].toString();
   }
+
+  
+
+  //? Add to favorite video
+  /// Adds a video to the list of favorite videos.
+
+  Future<bool> addToMyLearning(int videoID) async {
+    final supabase = ref.watch(supabaseProvider);
+    final user = supabase.auth.currentUser;
+    if (user != null) {
+      try {
+        await supabase.from(Constant.favoriteTable).insert({
+          "user_id": user.id,
+          "video_id": videoID,
+        });
+        log("added to favorite", name: "added to favorite");
+        return true;
+      } catch (e) {
+        log(e.toString(), name: "add to favorite error");
+        return false;
+      }
+    }
+    return false;
+  }
+
+  //? Remove from favorite video
+  /// Removes a video from the list of favorite videos.
+
+  Future<bool> removeFromMyLearning(int videoID) async {
+    final supabase = ref.watch(supabaseProvider);
+    final user = supabase.auth.currentUser;
+    if (user != null) {
+      try {
+        await supabase
+            .from(Constant.favoriteTable)
+            .delete()
+            .eq("video_id", videoID);
+        log("removed from favorite", name: "removed from favorite");
+        return true;
+      } catch (e) {
+        log(e.toString(), name: "remove from favorite error");
+        return false;
+      }
+    }
+    return false;
+  }
+
+ 
 }
 
 /// A provider for the `VideoNotifier` class, managing a list of `Video` objects.
@@ -83,7 +134,6 @@ final lectureVideoProvider = Provider<List<Video>>((ref) {
   return videos.where((video) => video.videoType == VideoType.lecture).toList();
 });
 
-
 ///* A provider to fetch videos with rating greater than 3
 
 /// A future provider to fetch the list of videos from the database asynchronously.
@@ -91,4 +141,12 @@ final videosFutureProvider = FutureProvider<List<Video>>((ref) async {
   final videos =
       await ref.watch(videoListProvider.notifier).fetchVideosFromDB();
   return videos;
+});
+
+
+
+//? check for is favorite
+final isFavoriteVideosProvider = Provider<List<Video>>((ref) {
+   final videos = ref.watch(videoListProvider);
+  return videos.where((video) => video.isFavorite).toList();
 });

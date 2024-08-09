@@ -5,6 +5,7 @@ import 'package:myapp/app/view/screens/dashboard_screen.dart';
 import 'package:myapp/authentication/view/login_view.dart';
 import 'package:myapp/authentication/view/register_view.dart';
 import 'package:myapp/user/view/profile.dart';
+import 'package:myapp/video/view/courses_view.dart';
 
 final routerManagerProvider = Provider<GoRouter>(
   (ref) {
@@ -38,6 +39,8 @@ class RouterManager {
   static const String registerRoute = '/register';
   static const String userProfileView = 'userProfile';
   static const String userProfileRoute = '/userProfile';
+  static const String courseDetailView = 'courseDetail';
+  static const String courseDetailRoute = '/courseDetail';
 }
 
 class MaterialRouteManager {
@@ -63,6 +66,10 @@ class MaterialRouteManager {
       case RouterManager.userProfileRoute:
         return MaterialPageRoute(
           builder: (context) => const UserProfileView(),
+        );
+      case RouterManager.courseDetailRoute:
+        return MaterialPageRoute(
+          builder: (context) => const CourseDetailView(),
         );
 
       default:

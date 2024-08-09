@@ -155,6 +155,7 @@ class DashboardEntryScreen extends ConsumerWidget {
                 );
               },
               error: (e, __) {
+                log(e.toString(), name: "Error fetching videos");
                 return SliverToBoxAdapter(
                   child: Column(
                     children: [

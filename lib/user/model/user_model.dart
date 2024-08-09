@@ -14,7 +14,6 @@ class UserModel {
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
-    log(json.runtimeType.toString(), name: "user model json");
     return UserModel(
       email: json['email'],
       username: json['username'],

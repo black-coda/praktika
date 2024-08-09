@@ -51,7 +51,6 @@ class Authenticator {
   Future<void> logout() async {
     try {
       final supabaseClient = ref.read(supabaseProvider);
-      ref.invalidate(authStateNotifierProvider);
       await supabaseClient.auth.signOut();
     } on AuthException {
       rethrow;

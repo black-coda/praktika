@@ -11,7 +11,7 @@ class ErrorView extends ConsumerWidget {
   });
 
   final String errorMessage;
-  final AlwaysAliveProviderBase providerClass;
+  final AutoDisposeFutureProvider providerClass;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

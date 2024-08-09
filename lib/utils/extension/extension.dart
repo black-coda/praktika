@@ -1,11 +1,7 @@
-// ignore_for_file: unused_local_variable
-
-import 'dart:developer';
-
 extension DurationParsing on String {
   Duration durationFromString() {
     List<String> parts = split(':');
-    log(parts.toString());
+
     if (parts.length != 3) {
       throw const FormatException('Invalid duration format');
     }
