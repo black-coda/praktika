@@ -54,7 +54,7 @@ class _UserProfileViewState extends ConsumerState<UserProfileView> {
                               NetworkImage(Constant.defaultProfileImage)),
                       const SizedBox(height: 16),
                       Text(
-                        value['username'].toString().toUpperCase(),
+                        value['full_name'].toString().toUpperCase(),
                         style: const TextStyle(color: Colors.white),
                       ),
                       SpacerConstant.sizedBox24,
