@@ -11,9 +11,9 @@ class VideoNotifier extends StateNotifier<List<Video>> {
 
   final Ref ref;
 
-  /// Fetches videos from the database, including their associated reviews.
+  ///? Fetches videos from the database, including their associated reviews.
   ///
-  /// Returns a list of `Video` objects.
+  ///? Returns a list of `Video` objects.
   Future<List<Video>> fetchVideosFromDB() async {
     final supabase = ref.watch(supabaseProvider);
     final user = supabase.auth.currentUser;
@@ -21,16 +21,17 @@ class VideoNotifier extends StateNotifier<List<Video>> {
     if (user == null) return [];
     final data = await supabase
         .from(Constant.videoTable)
-        .select('*, reviews(rating), my_learning(is_favorite)').eq("my_learning.user_id", user.id);
+        .select('*, reviews(rating), my_learning(is_favorite)')
+        .eq("my_learning.user_id", user.id);
     final videos = data.map((e) => Video.fromMap(e)).toList();
 
     state = videos;
     return state;
   }
 
-  /// Fetches the review of a specific video by its ID.
+  ///? Fetches the review of a specific video by its ID.
   ///
-  /// Returns the rating of the review as a `String`.
+  ///? Returns the rating of the review as a `String`.
   Future<String> getVideoReviewFromDB(int videoID) async {
     final supabase = ref.watch(supabaseProvider);
     final data = await supabase
@@ -42,11 +43,8 @@ class VideoNotifier extends StateNotifier<List<Video>> {
     return data.first["rating"].toString();
   }
 
-  
-
   //? Add to favorite video
   /// Adds a video to the list of favorite videos.
-
   Future<bool> addToMyLearning(int videoID) async {
     final supabase = ref.watch(supabaseProvider);
     final user = supabase.auth.currentUser;
@@ -68,7 +66,6 @@ class VideoNotifier extends StateNotifier<List<Video>> {
 
   //? Remove from favorite video
   /// Removes a video from the list of favorite videos.
-
   Future<bool> removeFromMyLearning(int videoID) async {
     final supabase = ref.watch(supabaseProvider);
     final user = supabase.auth.currentUser;
@@ -87,17 +84,15 @@ class VideoNotifier extends StateNotifier<List<Video>> {
     }
     return false;
   }
-
- 
 }
 
-/// A provider for the `VideoNotifier` class, managing a list of `Video` objects.
+///? A provider for the `VideoNotifier` class, managing a list of `Video` objects.
 final videoListProvider =
     StateNotifierProvider<VideoNotifier, List<Video>>((ref) {
   return VideoNotifier(ref);
 });
 
-/// A provider to filter the list of videos based on their type.
+///? A provider to filter the list of videos based on their type.
 final filteredTodoListProvider = Provider<List<Video>>((ref) {
   final filter = ref.watch(filterVideoProvider);
   final videos = ref.watch(videoListProvider);
@@ -117,20 +112,20 @@ final filteredTodoListProvider = Provider<List<Video>>((ref) {
   }
 });
 
-/// A provider to manage the current filter type for videos.
+///? A provider to manage the current filter type for videos.
 final filterVideoProvider = StateProvider<VideoType>(
   (ref) => VideoType.all,
 );
 
 /// A provider to filter and return only videos of type `course`.
 final courseVideoProvider = Provider<List<Video>>((ref) {
-  final videos = ref.watch(videoListProvider);
+  final videos = ref.watch(categoryFilterProvider);
   return videos.where((video) => video.videoType == VideoType.course).toList();
 });
 
 /// A provider to filter and return only videos of type `lecture`.
 final lectureVideoProvider = Provider<List<Video>>((ref) {
-  final videos = ref.watch(videoListProvider);
+  final videos = ref.watch(categoryFilterProvider);
   return videos.where((video) => video.videoType == VideoType.lecture).toList();
 });
 
@@ -143,10 +138,41 @@ final videosFutureProvider = FutureProvider<List<Video>>((ref) async {
   return videos;
 });
 
-
-
 //? check for is favorite
 final isFavoriteVideosProvider = Provider<List<Video>>((ref) {
-   final videos = ref.watch(videoListProvider);
+  final videos = ref.watch(videoListProvider);
   return videos.where((video) => video.isFavorite).toList();
+});
+
+//? category filter providers
+
+final categoryStateProvider = StateProvider<String?>(
+  (ref) => null,
+);
+
+final categoryFilterProvider = Provider<List<Video>>((ref) {
+  final category = ref.watch(categoryStateProvider);
+  print("category filter: ${ref.watch(categoryStateProvider.notifier).state}");
+  log(ref.watch(categoryStateProvider.notifier).state.toString(),
+      name: "category filter");
+
+  final videos = ref.watch(videoListProvider);
+
+  if (category == null) {
+    return videos; // Return all videos if no category is selected
+  }
+
+  final categoryFilterMap = {
+    'UI/UX': 'UI/UX',
+    'Illustrations': 'Illustrations',
+    'Graphic design': 'Graphic design',
+    'Marketing': 'marketing',
+    'Business': 'Business',
+    'Web development': 'Web development',
+    'Mobile development': 'Mobile development',
+  };
+
+  return videos
+      .where((video) => video.videoCategory == categoryFilterMap[category])
+      .toList();
 });

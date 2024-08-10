@@ -12,33 +12,29 @@ class MyLearning extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final video = ref.watch(isFavoriteVideosProvider);
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          'My Learning',
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              color: Colors.white, fontSize: 20, fontWeight: FontWeight.w400),
-        ),
-      ),
-      body: SingleChildScrollView(
-          child: Padding(
-        padding: Constant.scaffoldPadding,
-        child: SizedBox(
-          child: Expanded(
-            child: ListView.separated(
-              shrinkWrap: true,
-              itemCount: video.length,
-              separatorBuilder: (BuildContext context, int index) {
-                return const SizedBox(height: 12);
-              },
-              itemBuilder: (BuildContext context, int index) {
-                return VideoDetailCard(video: video[index], index: index);
-              },
-            ),
+    return CustomScrollView(
+      slivers: <Widget>[
+        SliverAppBar(
+          centerTitle: true,
+          title: Text(
+            'My Learning',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                color: Colors.white, fontSize: 20, fontWeight: FontWeight.w400),
           ),
         ),
-      )),
+        SliverPadding(
+          padding: Constant.scaffoldPadding,
+          sliver: SliverList.separated(
+            itemCount: video.length,
+            separatorBuilder: (BuildContext context, int index) {
+              return const SizedBox(height: 12);
+            },
+            itemBuilder: (BuildContext context, int index) {
+              return VideoDetailCard(video: video[index], index: index);
+            },
+          ),
+        ),
+      ],
     );
   }
 }

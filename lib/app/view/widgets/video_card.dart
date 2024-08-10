@@ -47,7 +47,7 @@ class VideoCard extends StatelessWidget {
                           : const Color(0xffDCC1FF),
                 ),
                 padding: const EdgeInsets.all(10),
-                width: 250,
+                width: 280,
                 child: Stack(
                   children: [
                     Row(
@@ -55,7 +55,7 @@ class VideoCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
-                          width: 100,
+                          width: 200,
                           child: Text(
                             videosList[index].title,
                             style: Theme.of(context)
@@ -249,6 +249,4 @@ class VideoDetailCard extends StatelessWidget {
           ),
         ));
   }
-
-  
 }

@@ -23,12 +23,6 @@ class DashboardView extends ConsumerStatefulWidget {
 
 class _DashboardViewState extends ConsumerState<DashboardView> {
   @override
-  void initState() {
-    super.initState();
-    ref.read(userDetailsProvider).getUserDetails();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final index = ref.watch(indexProvider);
     return Scaffold(
@@ -68,6 +62,7 @@ class DashboardEntryScreen extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16),
         child: CustomScrollView(
           slivers: [
+            //? Appbar
             SliverAppBar(
               leading: GestureDetector(
                 onTap: () {
@@ -117,24 +112,45 @@ class DashboardEntryScreen extends ConsumerWidget {
                 )
               ],
             ),
-            const SliverToBoxAdapter(
+            //? category filter
+            SliverToBoxAdapter(
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 12),
+                padding: const EdgeInsets.symmetric(vertical: 12),
                 child: Wrap(
                   spacing: 4.0,
                   runSpacing: 0.0,
                   children: [
-                    ChipWidget(text: "UI/UX"),
-                    ChipWidget(text: "Illustrations"),
-                    ChipWidget(text: "Graphic Design"),
-                    ChipWidget(text: "Marketing"),
-                    ChipWidget(text: "Business"),
-                    ChipWidget(text: "Web development"),
-                    ChipWidget(text: "Mobile development"),
+                    ...[
+                      "UI/UX",
+                      "Illustrations",
+                      "Graphic design",
+                      "Marketing",
+                      "Business",
+                      "Web development",
+                      "Mobile development",
+                    ].map(
+                      (category) => ChipWidget(
+                        text: category,
+                        onTap: () {
+                          log(category, name: "Category");
+                          ref.watch(categoryStateProvider.notifier).state =
+                              category;
+                        },
+                      ),
+                    ),
+                    ChipWidget(
+                      text: "Reset filter",
+                      onTap: () {
+                        log("Reset", name: "Category");
+                        ref.watch(categoryStateProvider.notifier).state = null;
+                      },
+                    ),
                   ],
                 ),
               ),
             ),
+
+            //? videos after loading
             videos.when(
               data: (courses) {
                 return SliverToBoxAdapter(

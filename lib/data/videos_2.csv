@@ -1,0 +1,41 @@
+id,title,price,duration,vid_category,vid_type
+11,Advanced UI/UX Techniques,29,01:50:00,UI/UX,lecture
+12,Graphic Design Masterclass,35,02:10:00,Graphic design,course
+13,Marketing for Digital Products,32,01:55:00,marketing,lecture
+14,Building Scalable Web Apps,45,02:45:00,Web development,course
+15,Mastering Business Analytics,38,02:30:00,Business,lecture
+16,Illustration Techniques for Pros,40,02:20:00,Illustrations,course
+17,Dart Programming Essentials,22,01:25:00,Mobile development,lecture
+18,UI/UX Case Studies,28,01:35:00,UI/UX,course
+19,Web Development with React,34,02:05:00,Web development,lecture
+20,Effective Business Communication,30,01:45:00,Business,course
+21,UI/UX Design Trends,27,01:40:00,UI/UX,lecture
+22,Advanced Mobile App Development,42,02:15:00,Mobile development,course
+23,Illustration Mastery,36,01:55:00,Illustrations,lecture
+24,Marketing Automation Techniques,33,01:50:00,marketing,course
+25,Graphic Design Portfolio Building,25,01:35:00,Graphic design,lecture
+26,Scaling Business Operations,48,02:35:00,Business,course
+27,Web Development Best Practices,39,02:10:00,Web development,lecture
+28,Illustrations in Digital Media,31,01:45:00,Illustrations,course
+29,Building Mobile Apps with Flutter,44,02:20:00,Mobile development,course
+30,Marketing Strategies for Startups,29,01:40:00,marketing,lecture
+31,Designing Responsive Web Interfaces,37,02:00:00,Web development,course
+32,Advanced Graphic Design Tools,34,02:05:00,Graphic design,lecture
+33,UI/UX Design for Mobile Apps,43,02:25:00,UI/UX,course
+34,Marketing Analytics Techniques,35,01:55:00,marketing,lecture
+35,Web Development with Node.js,38,02:15:00,Web development,course
+36,Illustration Techniques for Animation,41,02:30:00,Illustrations,lecture
+37,Graphic Design for Branding,32,01:50:00,Graphic design,course
+38,UI/UX Prototyping Techniques,39,02:05:00,UI/UX,lecture
+39,Marketing Funnels Explained,28,01:35:00,marketing,course
+40,Building Progressive Web Apps,46,02:25:00,Web development,course
+41,Introduction to Business Intelligence,33,01:55:00,Business,lecture
+42,Mobile App Performance Optimization,37,02:00:00,Mobile development,lecture
+43,UI/UX Case Study: Successful Designs,31,01:45:00,UI/UX,course
+44,Marketing Campaigns that Convert,34,02:10:00,marketing,lecture
+45,Graphic Design for Print Media,30,01:35:00,Graphic design,course
+46,Building Interactive Web Elements,40,02:20:00,Web development,lecture
+47,Advanced Business Strategy,50,02:40:00,Business,course
+48,Mobile App User Experience,36,01:55:00,Mobile development,course
+49,Illustrations in Marketing,26,01:30:00,Illustrations,lecture
+50,UI/UX Design Systems,38,02:00:00,UI/UX,course
