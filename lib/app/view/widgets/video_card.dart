@@ -71,7 +71,7 @@ class VideoCard extends StatelessWidget {
                         const Icon(Icons.favorite_border_outlined, size: 20)
                       ],
                     ),
-
+            //? price widget
                     Positioned(
                       bottom: 35,
                       left: 0,
@@ -116,7 +116,7 @@ class VideoCard extends StatelessWidget {
                       ),
                     ),
 
-                    // price, tags,
+                    //? price, tags,
                     Align(
                       alignment: Alignment.bottomRight,
                       widthFactor: 0,

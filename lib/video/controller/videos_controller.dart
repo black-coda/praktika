@@ -118,20 +118,24 @@ final filterVideoProvider = StateProvider<VideoType>(
 );
 
 /// A provider to filter and return only videos of type `course`.
-final courseVideoProvider = Provider<List<Video>>((ref) {
-  final videos = ref.watch(categoryFilterProvider);
+final courseVideoProvider =
+    Provider.family<List<Video>, AlwaysAliveProviderBase<List<Video>>>(
+        (ref, videoListProvider) {
+  final videos = ref.watch(videoListProvider);
   return videos.where((video) => video.videoType == VideoType.course).toList();
 });
 
 /// A provider to filter and return only videos of type `lecture`.
-final lectureVideoProvider = Provider<List<Video>>((ref) {
-  final videos = ref.watch(categoryFilterProvider);
+final lectureVideoProvider =
+    Provider.family<List<Video>, AlwaysAliveProviderBase<List<Video>>>(
+        (ref, videoListProvider) {
+  final videos = ref.watch(videoListProvider);
   return videos.where((video) => video.videoType == VideoType.lecture).toList();
 });
 
-///* A provider to fetch videos with rating greater than 3
+///TODO: A provider to fetch videos with rating greater than 3
 
-/// A future provider to fetch the list of videos from the database asynchronously.
+///* A future provider to fetch the list of videos from the database asynchronously.
 final videosFutureProvider = FutureProvider<List<Video>>((ref) async {
   final videos =
       await ref.watch(videoListProvider.notifier).fetchVideosFromDB();
@@ -139,7 +143,8 @@ final videosFutureProvider = FutureProvider<List<Video>>((ref) async {
 });
 
 //? check for is favorite
-final isFavoriteVideosProvider = Provider<List<Video>>((ref) {
+final favoriteVideosProvider = Provider<List<Video>>((ref) {
+  //? makes reference to the videos provider from the StateNotifier
   final videos = ref.watch(videoListProvider);
   return videos.where((video) => video.isFavorite).toList();
 });
@@ -152,9 +157,6 @@ final categoryStateProvider = StateProvider<String?>(
 
 final categoryFilterProvider = Provider<List<Video>>((ref) {
   final category = ref.watch(categoryStateProvider);
-  print("category filter: ${ref.watch(categoryStateProvider.notifier).state}");
-  log(ref.watch(categoryStateProvider.notifier).state.toString(),
-      name: "category filter");
 
   final videos = ref.watch(videoListProvider);
 

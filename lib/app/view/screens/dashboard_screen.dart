@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:myapp/app/controllers/bottom_navbar_controller/btn_nav_controller.dart';
@@ -131,19 +130,13 @@ class DashboardEntryScreen extends ConsumerWidget {
                     ].map(
                       (category) => ChipWidget(
                         text: category,
+                        isSelected:
+                            ref.watch(categoryStateProvider.notifier).state ==
+                                category,
                         onTap: () {
-                          log(category, name: "Category");
-                          ref.watch(categoryStateProvider.notifier).state =
-                              category;
+                          isCategoryFilterSelected(ref, category);
                         },
                       ),
-                    ),
-                    ChipWidget(
-                      text: "Reset filter",
-                      onTap: () {
-                        log("Reset", name: "Category");
-                        ref.watch(categoryStateProvider.notifier).state = null;
-                      },
                     ),
                   ],
                 ),
@@ -159,12 +152,12 @@ class DashboardEntryScreen extends ConsumerWidget {
                     children: [
                       const HeaderWidget("Courses"),
                       VideoCard(
-                        videosList: ref.watch(courseVideoProvider),
+                        videosList: ref.watch(courseVideoProvider(categoryFilterProvider)),
                       ),
                       SpacerConstant.sizedBox20,
                       const HeaderWidget("Lectures"),
                       VideoCard(
-                        videosList: ref.watch(lectureVideoProvider),
+                        videosList: ref.watch(lectureVideoProvider(categoryFilterProvider)),
                       ),
                     ],
                   ),
@@ -206,5 +199,15 @@ class DashboardEntryScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  void isCategoryFilterSelected(WidgetRef ref, String category) {
+    final categoryNotifier = ref.watch(categoryStateProvider.notifier);
+
+    if (categoryNotifier.state == category) {
+      categoryNotifier.state = null;
+    } else {
+      categoryNotifier.state = category;
+    }
   }
 }

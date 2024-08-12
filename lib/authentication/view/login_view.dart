@@ -117,7 +117,7 @@ class _LoginViewState extends ConsumerState<LoginView>
                     height: MediaQuery.sizeOf(context).height * 0.1,
                   ),
                   SizedBox(
-                    height: 48,
+                    height: 56,
                     width: double.infinity,
                     child: ElevatedButton(
                         onPressed: () async {
@@ -150,6 +150,7 @@ class _LoginViewState extends ConsumerState<LoginView>
                         child: const Text("Log in")),
                   ),
                   SizedBox(height: MediaQuery.sizeOf(context).height * 0.2),
+                  //? sign up
                   GestureDetector(
                     onTap: () {
                       Navigator.pushNamed(context, RouterManager.registerRoute);

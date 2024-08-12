@@ -73,7 +73,7 @@ class CourseDetailView extends ConsumerWidget {
                   const Spacer(),
                   IconButton(
                     onPressed: () async {
-                      final isFav = ref.watch(isFavoriteVideosProvider);
+                      final isFav = ref.watch(favoriteVideosProvider);
                       isFav.contains(video!)
                           ? ref
                               .watch(videoListProvider.notifier)
@@ -90,7 +90,7 @@ class CourseDetailView extends ConsumerWidget {
                       builder: (context, ref, child) {
                         ref.watch(videoListProvider);
                         return Icon(
-                          ref.watch(isFavoriteVideosProvider).contains(video!)
+                          ref.watch(favoriteVideosProvider).contains(video!)
                               ? Icons.bookmark
                               : Icons.bookmark_border,
                           color: Colors.white,

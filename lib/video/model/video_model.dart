@@ -1,4 +1,6 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
+
 import 'package:myapp/utils/extension/extension.dart';
 
 class Video {
@@ -43,6 +45,36 @@ class Video {
 
   factory Video.fromJson(String source) =>
       Video.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  bool operator ==(covariant Video other) {
+    if (identical(this, other)) return true;
+  
+    return 
+      other.id == id &&
+      other.title == title &&
+      other.price == price &&
+      other.videoCategory == videoCategory &&
+      other.videoType == videoType &&
+      other.duration == duration &&
+      other.isFavorite == isFavorite;
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+      title.hashCode ^
+      price.hashCode ^
+      videoCategory.hashCode ^
+      videoType.hashCode ^
+      duration.hashCode ^
+      isFavorite.hashCode;
+  }
+
+  @override
+  String toString() {
+    return 'Video(id: $id, title: $title, price: $price, videoCategory: $videoCategory, videoType: $videoType, duration: $duration, isFavorite: $isFavorite)';
+  }
 }
 
 enum VideoType {
