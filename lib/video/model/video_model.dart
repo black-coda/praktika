@@ -11,6 +11,7 @@ class Video {
   final VideoType videoType;
   final Duration duration;
   final bool isFavorite;
+  final String description;
 
   Video({
     required this.id,
@@ -20,6 +21,7 @@ class Video {
     required this.videoType,
     required this.duration,
     this.isFavorite = false,
+    this.description = '',
   });
 
   // Parse a HH:MM:SS string to a Duration
@@ -40,6 +42,7 @@ class Video {
       videoType: VideoType.values.byName(map['vid_type']),
       duration: map["duration"].toString().durationFromString(),
       isFavorite: isFavorite,
+      description: map['description'] as String,
     );
   }
 
@@ -52,12 +55,7 @@ class Video {
   
     return 
       other.id == id &&
-      other.title == title &&
-      other.price == price &&
-      other.videoCategory == videoCategory &&
-      other.videoType == videoType &&
-      other.duration == duration &&
-      other.isFavorite == isFavorite;
+      other.title == title;
   }
 
   @override
@@ -68,6 +66,7 @@ class Video {
       videoCategory.hashCode ^
       videoType.hashCode ^
       duration.hashCode ^
+      description.hashCode ^
       isFavorite.hashCode;
   }
 

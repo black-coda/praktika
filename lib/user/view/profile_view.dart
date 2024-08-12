@@ -9,6 +9,7 @@ import 'package:myapp/user/view_models/user_profiles_backend.dart';
 import 'package:myapp/utils/constant/constant.dart';
 import 'package:myapp/utils/error/view/error_view.dart';
 import 'package:myapp/utils/loader/simmer_text.dart';
+import 'package:myapp/utils/widget/custom_tile_widget.dart';
 
 class UserProfileView extends ConsumerStatefulWidget {
   const UserProfileView({super.key});
@@ -18,8 +19,6 @@ class UserProfileView extends ConsumerStatefulWidget {
 }
 
 class _UserProfileViewState extends ConsumerState<UserProfileView> {
- 
-
   @override
   Widget build(BuildContext context) {
     final userProfile = ref.watch(userProfileBackendFutureProvider);
@@ -110,28 +109,28 @@ class _UserProfileViewState extends ConsumerState<UserProfileView> {
                           shrinkWrap: true,
                           children: [
                             //* Edit profile
-                            ProfileTile(
+                            CustomTile(
                               title: "Edit Profile",
                               onTap: () {
                                 // TODO: configure functionality
                               },
                             ),
                             //* Settings
-                            ProfileTile(
+                            CustomTile(
                               title: "Settings",
                               onTap: () {
                                 // TODO: configure functionality
                               },
                             ),
                             //* Support
-                            ProfileTile(
+                            CustomTile(
                               title: "Support",
                               onTap: () {
                                 // TODO: configure functionality
                               },
                             ),
                             //* About app
-                            ProfileTile(
+                            CustomTile(
                               title: "About App",
                               onTap: () {
                                 // TODO: configure functionality
@@ -172,30 +171,6 @@ class _UserProfileViewState extends ConsumerState<UserProfileView> {
             child: ShimmerText('Loading...'),
           ),
       },
-    );
-  }
-}
-
-class ProfileTile extends StatelessWidget {
-  const ProfileTile({
-    super.key,
-    required this.title,
-    required this.onTap,
-  });
-
-  final String title;
-  final void Function() onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(title, style: const TextStyle(color: Colors.white)),
-      trailing: const Icon(
-        Icons.arrow_forward_ios,
-        color: Colors.white,
-        size: 24,
-      ),
-      onTap: onTap,
     );
   }
 }

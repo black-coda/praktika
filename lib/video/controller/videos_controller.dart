@@ -11,6 +11,18 @@ class VideoNotifier extends StateNotifier<List<Video>> {
 
   final Ref ref;
 
+  //? search feature
+  Future<List<Video>> searchFunction(String query) async {
+    final result = await ref
+        .read(supabaseProvider)
+        .from('videos')
+        .select()
+        .ilike("title_description", '$query%');
+
+    log(result.length.toString(), name: "search result");
+    return result.map((e) => Video.fromMap(e)).toList();
+  }
+
   ///? Fetches videos from the database, including their associated reviews.
   ///
   ///? Returns a list of `Video` objects.
@@ -177,4 +189,48 @@ final categoryFilterProvider = Provider<List<Video>>((ref) {
   return videos
       .where((video) => video.videoCategory == categoryFilterMap[category])
       .toList();
+});
+
+final queryProvider = StateProvider<String>((ref) {
+  return "";
+});
+
+final searchFunctionProvider = FutureProvider<List<Video>>((ref) async {
+  final videos = ref.watch(videoListProvider);
+  final query = ref.watch(queryProvider);
+  return videos
+      .where((Video video) =>
+          video.title.toLowerCase().contains(query.toLowerCase()) ||
+          video.description.toLowerCase().contains(query.toLowerCase()))
+      .toList();
+});
+
+final searchResultProvider = StateProvider<List<Video>>((ref) {
+  final result = ref.watch(searchFunctionProvider);
+  return result.asData?.value ?? [];
+});
+
+class SearchStateNotifier extends StateNotifier<List<Video>> {
+  SearchStateNotifier(this.ref) : super([]);
+
+  final Ref ref;
+
+  //? search feature
+  Future<List<Video>> searchFunction(String query) async {
+    final result = await ref
+        .read(supabaseProvider)
+        .from('videos')
+        .select()
+        .ilike("title_description", '%$query%');
+
+    log(result.length.toString(), name: "search result");
+    final videos = result.map((e) => Video.fromMap(e)).toList();
+    state = videos;
+    return state;
+  }
+}
+
+final searchStateProvider =
+    StateNotifierProvider<SearchStateNotifier, List<Video>>((ref) {
+  return SearchStateNotifier(ref);
 });

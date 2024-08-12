@@ -7,12 +7,11 @@ import 'package:myapp/app/view/widgets/video_card.dart';
 import 'package:myapp/utils/constant/constant.dart';
 import 'package:myapp/video/controller/videos_controller.dart';
 
-class MyLearning extends ConsumerWidget {
-  const MyLearning({super.key});
+class MyLearningView extends ConsumerWidget {
+  const MyLearningView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final video = ref.watch(favoriteVideosProvider);
     return CustomScrollView(
       slivers: <Widget>[
         SliverAppBar(
@@ -30,35 +29,23 @@ class MyLearning extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const HeaderWidget("Courses"),
+                SpacerConstant.sizedBox16,
                 VideoCard(
                   videosList:
                       ref.watch(courseVideoProvider(favoriteVideosProvider)),
                 ),
-                SpacerConstant.sizedBox20,
+                SpacerConstant.sizedBox24,
                 const HeaderWidget("Lectures"),
+                SpacerConstant.sizedBox16,
                 VideoCard(
                   videosList:
                       ref.watch(lectureVideoProvider(favoriteVideosProvider)),
                 ),
                 const SizedBox(height: 12),
-                const Divider(
-                  color: Colors.white,
-                  thickness: 1,
-                ),
+
+                //? Implement trending/top/featured videos here
               ],
             ),
-          ),
-        ),
-        SliverPadding(
-          padding: Constant.scaffoldPadding,
-          sliver: SliverList.separated(
-            itemCount: video.length,
-            separatorBuilder: (BuildContext context, int index) {
-              return const SizedBox(height: 12);
-            },
-            itemBuilder: (BuildContext context, int index) {
-              return VideoDetailCard(video: video[index], index: index);
-            },
           ),
         ),
       ],
