@@ -7,6 +7,7 @@ import 'package:myapp/authentication/controller/supabase_provider.dart';
 import 'package:myapp/utils/constant/constant.dart';
 import 'package:myapp/utils/widget/custom_tile_widget.dart';
 import 'package:myapp/video/controller/videos_controller.dart';
+import '../model/video_model.dart';
 import 'widget/search_widget.dart';
 
 class SearchView extends ConsumerStatefulWidget {
