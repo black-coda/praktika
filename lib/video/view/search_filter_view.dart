@@ -28,9 +28,7 @@ class _SearchFilterViewState extends ConsumerState<SearchFilterView1>
     );
 
     _animation = Tween<double>(begin: 0, end: 0.5).animate(_animationController)
-      ..addListener(() {
-        log(_animationController.value.toString(), name: "animation value");
-      });
+      ..addListener(() {});
     _animationController.forward();
     super.initState();
   }
@@ -85,21 +83,24 @@ class SearchFilterView extends ConsumerWidget {
             Wrap(
               spacing: 8,
               children: [
-                ChipWidget(
-                  text: "Lectures",
-                  onTap: () {
-                    log("Lectures tapped", name: "Lectures");
-                    ref.read(filterVideoProvider.notifier).state =
-                        VideoType.lecture;
-                  },
-                ),
-                ChipWidget(
-                  text: "Courses",
-                  onTap: () {
-                    log("Courses tapped", name: "Courses");
-                    ref.read(filterVideoProvider.notifier).state =
-                        VideoType.course;
-                  },
+                ...[
+                  "Lectures",
+                  "Courses",
+                ].map(
+                  (type) => ChipWidget(
+                    text: type,
+                    isSelected: ref.watch(filterVideoProvider) ==
+                        (type == "Lectures"
+                            ? VideoType.lecture
+                            : VideoType.course),
+                    onTap: () {
+                      log("$type tapped", name: type);
+                      ref.read(filterVideoProvider.notifier).state =
+                          type == "Lectures"
+                              ? VideoType.lecture
+                              : VideoType.course;
+                    },
+                  ),
                 ),
               ],
             ),
@@ -115,9 +116,56 @@ class SearchFilterView extends ConsumerWidget {
                   "Graphic design",
                   "Marketing",
                   "Business"
-                ].map((categoryName) => ChipWidget(text: categoryName)),
+                ].map(
+                  (categoryName) => ChipWidget(
+                    text: categoryName,
+                    onTap: () {
+                      log("$categoryName tapped", name: categoryName);
+                      ref
+                          .watch(categorySearchFilterStateProvider.notifier)
+                          .state = categoryName;
+                    },
+                    isSelected: ref.watch(categorySearchFilterStateProvider) ==
+                        categoryName,
+                  ),
+                ),
               ],
             ),
+            SpacerConstant.sizedBox24,
+
+            //* Apply filter and clear filter
+            Wrap(
+              spacing: 8,
+              children: [
+                //* Apply Filter
+                TextButton(
+                  onPressed: () {
+                    log("Apply Filter tapped", name: "Apply Filter");
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    "Apply Filter",
+                    style: Constant.underlineStyle(context),
+                  ),
+                ),
+                //* Clear Filter
+                TextButton(
+                  onPressed: () {
+                    log("Clear Filter tapped", name: "Clear Filter");
+                    ref.watch(filterVideoProvider.notifier).state =
+                        VideoType.all;
+
+                    ref
+                        .watch(categorySearchFilterStateProvider.notifier)
+                        .state = null;
+                  },
+                  child: Text(
+                    "Clear Filter",
+                    style: Constant.underlineStyle(context),
+                  ),
+                ),
+              ],
+            )
           ],
         ),
       ),

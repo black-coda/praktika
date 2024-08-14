@@ -34,7 +34,7 @@ class _SearchViewState extends ConsumerState<SearchView> {
   @override
   Widget build(BuildContext context) {
     final isSearching = ref.watch(isSearchingProvider);
-    final searchResult = ref.watch(filterStateProvider);
+    final searchResult = ref.watch(filteredTodoListProvider);
 
     return SafeArea(
       child: Scaffold(

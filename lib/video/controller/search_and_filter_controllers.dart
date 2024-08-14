@@ -20,7 +20,6 @@ import 'videos_controller.dart';
 //       .toList();
 // });
 
-
 class SearchStateNotifier extends StateNotifier<List<Video>> {
   SearchStateNotifier(this.ref) : super([]);
 
@@ -41,6 +40,8 @@ class SearchStateNotifier extends StateNotifier<List<Video>> {
   }
 }
 
+//TODO: Continue from this feature
+
 final filterStateProvider =
     StateNotifierProvider<SearchStateNotifier, List<Video>>((ref) {
   return SearchStateNotifier(ref);
@@ -49,23 +50,37 @@ final filterStateProvider =
 //* check if search function is called
 final isSearchingProvider = StateProvider.autoDispose<bool>((ref) => false);
 
-
-
 //* filter by type
 final filteredTodoListProvider = Provider<List<Video>>((ref) {
   final filter = ref.watch(filterVideoProvider);
+  log(filter.toString(), name: "filter");
   final videos = ref.watch(filterStateProvider);
+
+  final category = ref.watch(categorySearchFilterStateProvider);
+
+  final categoryFilterMap = {
+    'UI/UX': 'UI/UX',
+    'Illustrations': 'Illustrations',
+    'Graphic design': 'Graphic design',
+    'Marketing': 'marketing',
+    'Business': 'Business',
+    'Web development': 'Web development',
+    'Mobile development': 'Mobile development',
+  };
 
   switch (filter) {
     case VideoType.lecture:
-      final lectureVideos = videos
-          .where((video) => video.videoType == VideoType.lecture)
+      final matchingVideos = videos
+          .where((video) => (video.videoType == VideoType.lecture &&
+              video.videoCategory == categoryFilterMap[category]))
           .toList();
-      return lectureVideos;
+      return matchingVideos;
     case VideoType.course:
-      final courseVideos =
-          videos.where((video) => video.videoType == VideoType.course).toList();
-      return courseVideos;
+      final matchingVideos = videos
+          .where((video) => (video.videoType == VideoType.course &&
+              video.videoCategory == categoryFilterMap[category]))
+          .toList();
+      return matchingVideos;
     case VideoType.all:
       return videos;
   }
@@ -75,3 +90,35 @@ final filteredTodoListProvider = Provider<List<Video>>((ref) {
 final filterVideoProvider = StateProvider<VideoType>(
   (ref) => VideoType.all,
 );
+
+//* filter by category
+
+///? A provider to manage the current filter category for videos.
+
+final categorySearchFilterStateProvider = StateProvider<String?>(
+  (ref) => null,
+);
+
+final categorySearchFilterProvider = Provider<List<Video>>((ref) {
+  final category = ref.watch(categorySearchFilterStateProvider);
+
+  final videos = ref.watch(filterStateProvider);
+
+  if (category == null) {
+    return videos; // Return all videos if no category is selected
+  }
+
+  final categoryFilterMap = {
+    'UI/UX': 'UI/UX',
+    'Illustrations': 'Illustrations',
+    'Graphic design': 'Graphic design',
+    'Marketing': 'marketing',
+    'Business': 'Business',
+    'Web development': 'Web development',
+    'Mobile development': 'Mobile development',
+  };
+
+  return videos
+      .where((video) => video.videoCategory == categoryFilterMap[category])
+      .toList();
+});

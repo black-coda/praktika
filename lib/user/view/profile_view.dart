@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:myapp/authentication/controller/auth_controller.dart';
@@ -143,14 +142,8 @@ class _UserProfileViewState extends ConsumerState<UserProfileView> {
                               .read(authStateNotifierProvider.notifier)
                               .logout();
                         },
-                        label: const Text(
-                          "Logout",
-                          style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              decorationStyle: TextDecorationStyle.solid,
-                              decorationColor: Color(0xff6C6C6C),
-                              color: Color(0xff6C6C6C)),
-                        ),
+                        label: Text("Logout",
+                            style: Constant.underlineStyle(context)),
                         icon:
                             const Icon(Icons.logout, color: Color(0xff6C6C6C)),
                       ),

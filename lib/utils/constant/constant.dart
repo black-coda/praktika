@@ -18,11 +18,18 @@ class Constant {
             : const Color(0xffDCC1FF);
   }
 
-  static TextStyle appBarTitleStyle(context, {Color ? color}) =>
+  static TextStyle appBarTitleStyle(context, {Color? color}) =>
       Theme.of(context).textTheme.headlineSmall!.copyWith(
-          color:color ?? const Color(0xffDCC1FF),
+          color: color ?? const Color(0xffDCC1FF),
           fontSize: 20,
           fontWeight: FontWeight.w400);
+
+  static TextStyle underlineStyle(context, {Color? color}) => TextStyle(
+        decoration: TextDecoration.underline,
+        decorationStyle: TextDecorationStyle.solid,
+        decorationColor: const Color(0xff6C6C6C),
+        color: color ?? const Color(0xff6C6C6C),
+      );
 }
 
 class SpacerConstant {
