@@ -11,17 +11,7 @@ class VideoNotifier extends StateNotifier<List<Video>> {
 
   final Ref ref;
 
-  //? search feature
-  Future<List<Video>> searchFunction(String query) async {
-    final result = await ref
-        .read(supabaseProvider)
-        .from('videos')
-        .select()
-        .ilike("title_description", '$query%');
-
-    log(result.length.toString(), name: "search result");
-    return result.map((e) => Video.fromMap(e)).toList();
-  }
+  
 
   ///? Fetches videos from the database, including their associated reviews.
   ///
@@ -35,6 +25,9 @@ class VideoNotifier extends StateNotifier<List<Video>> {
         .from(Constant.videoTable)
         .select('*, reviews(rating), my_learning(is_favorite)')
         .eq("my_learning.user_id", user.id);
+
+    log("fetch videos from db called",
+        name: "VideoNotifier(fetchVideosFromDB)");
     final videos = data.map((e) => Video.fromMap(e)).toList();
 
     state = videos;
@@ -99,35 +92,13 @@ class VideoNotifier extends StateNotifier<List<Video>> {
 }
 
 ///? A provider for the `VideoNotifier` class, managing a list of `Video` objects.
-final videoListProvider =
+final videoNotifierProvider =
     StateNotifierProvider<VideoNotifier, List<Video>>((ref) {
   return VideoNotifier(ref);
 });
 
 ///? A provider to filter the list of videos based on their type.
-final filteredTodoListProvider = Provider<List<Video>>((ref) {
-  final filter = ref.watch(filterVideoProvider);
-  final videos = ref.watch(videoListProvider);
 
-  switch (filter) {
-    case VideoType.lecture:
-      final lectureVideos = videos
-          .where((video) => video.videoType == VideoType.lecture)
-          .toList();
-      return lectureVideos;
-    case VideoType.course:
-      final courseVideos =
-          videos.where((video) => video.videoType == VideoType.course).toList();
-      return courseVideos;
-    case VideoType.all:
-      return videos;
-  }
-});
-
-///? A provider to manage the current filter type for videos.
-final filterVideoProvider = StateProvider<VideoType>(
-  (ref) => VideoType.all,
-);
 
 /// A provider to filter and return only videos of type `course`.
 final courseVideoProvider =
@@ -150,14 +121,14 @@ final lectureVideoProvider =
 ///* A future provider to fetch the list of videos from the database asynchronously.
 final videosFutureProvider = FutureProvider<List<Video>>((ref) async {
   final videos =
-      await ref.watch(videoListProvider.notifier).fetchVideosFromDB();
+      await ref.watch(videoNotifierProvider.notifier).fetchVideosFromDB();
   return videos;
 });
 
 //? check for is favorite
 final favoriteVideosProvider = Provider<List<Video>>((ref) {
   //? makes reference to the videos provider from the StateNotifier
-  final videos = ref.watch(videoListProvider);
+  final videos = ref.watch(videoNotifierProvider);
   return videos.where((video) => video.isFavorite).toList();
 });
 
@@ -170,7 +141,7 @@ final categoryStateProvider = StateProvider<String?>(
 final categoryFilterProvider = Provider<List<Video>>((ref) {
   final category = ref.watch(categoryStateProvider);
 
-  final videos = ref.watch(videoListProvider);
+  final videos = ref.watch(videoNotifierProvider);
 
   if (category == null) {
     return videos; // Return all videos if no category is selected
@@ -191,46 +162,3 @@ final categoryFilterProvider = Provider<List<Video>>((ref) {
       .toList();
 });
 
-final queryProvider = StateProvider<String>((ref) {
-  return "";
-});
-
-final searchFunctionProvider = FutureProvider<List<Video>>((ref) async {
-  final videos = ref.watch(videoListProvider);
-  final query = ref.watch(queryProvider);
-  return videos
-      .where((Video video) =>
-          video.title.toLowerCase().contains(query.toLowerCase()) ||
-          video.description.toLowerCase().contains(query.toLowerCase()))
-      .toList();
-});
-
-final searchResultProvider = StateProvider<List<Video>>((ref) {
-  final result = ref.watch(searchFunctionProvider);
-  return result.asData?.value ?? [];
-});
-
-class SearchStateNotifier extends StateNotifier<List<Video>> {
-  SearchStateNotifier(this.ref) : super([]);
-
-  final Ref ref;
-
-  //? search feature
-  Future<List<Video>> searchFunction(String query) async {
-    final result = await ref
-        .read(supabaseProvider)
-        .from('videos')
-        .select()
-        .ilike("title_description", '%$query%');
-
-    log(result.length.toString(), name: "search result");
-    final videos = result.map((e) => Video.fromMap(e)).toList();
-    state = videos;
-    return state;
-  }
-}
-
-final searchStateProvider =
-    StateNotifierProvider<SearchStateNotifier, List<Video>>((ref) {
-  return SearchStateNotifier(ref);
-});

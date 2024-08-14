@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:myapp/video/controller/videos_controller.dart';
-import 'package:myapp/video/view/search_view.dart';
+import 'package:myapp/video/controller/search_and_filter_controllers.dart';
+import 'package:myapp/video/view/search_filter_view.dart';
 
 class SearchFormWidget extends ConsumerWidget {
   const SearchFormWidget({
@@ -15,6 +15,7 @@ class SearchFormWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var overlayController = OverlayPortalController();
     return TextFormField(
       onChanged: (value) async {
         log(value, name: "search value changed");
@@ -24,7 +25,7 @@ class SearchFormWidget extends ConsumerWidget {
 
         // Perform search and update the search results
         if (value.isNotEmpty) {
-          await ref.watch(searchStateProvider.notifier).searchFunction(value);
+          await ref.watch(filterStateProvider.notifier).searchFunction(value);
           // ref.read(searchResultProvider.notifier).state = results;
         } else {
           // ref.read(searchResultProvider.notifier).state = [];
@@ -42,8 +43,22 @@ class SearchFormWidget extends ConsumerWidget {
         prefixIcon: const Icon(Icons.search),
         prefixIconColor: Colors.white,
         suffixIconColor: Colors.white,
-        suffixIcon: IconButton(
-            onPressed: () {}, icon: const Icon(Icons.filter_list_rounded)),
+        suffixIcon: OverlayPortal(
+          controller: overlayController,
+          overlayChildBuilder: (context) => const Align(
+            alignment: Alignment.topCenter,
+            child: SearchFilterView1(),
+          ),
+          child: IconButton(
+              onPressed: () {
+                //* show filter overlay dialog
+                // overlayController.toggle();
+
+                //* Navigate to filter screen
+                Navigator.pushNamed(context, '/searchFilter');
+              },
+              icon: const Icon(Icons.filter_list_rounded)),
+        ),
         hintStyle: const TextStyle(color: Colors.white),
         border: const OutlineInputBorder(
           borderRadius: BorderRadius.all(

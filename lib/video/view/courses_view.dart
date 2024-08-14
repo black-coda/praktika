@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:myapp/app/view/widgets/video_card.dart';
@@ -76,19 +75,18 @@ class CourseDetailView extends ConsumerWidget {
                       final isFav = ref.watch(favoriteVideosProvider);
                       isFav.contains(video!)
                           ? ref
-                              .watch(videoListProvider.notifier)
+                              .watch(videoNotifierProvider.notifier)
                               .removeFromMyLearning(video!.id)
                           : ref
-                              .watch(videoListProvider.notifier)
+                              .watch(videoNotifierProvider.notifier)
                               .addToMyLearning(video!.id);
-                      // ref.invalidate(videoListProvider);
-                      await ref
-                          .watch(videoListProvider.notifier)
-                          .fetchVideosFromDB();
+                      ref.refresh(videoNotifierProvider.notifier).fetchVideosFromDB();
+                      // await ref
+                      //     .watch(videoNotifierProvider.notifier)
+                      //     .fetchVideosFromDB();
                     },
                     icon: Consumer(
                       builder: (context, ref, child) {
-                        ref.watch(videoListProvider);
                         return Icon(
                           ref.watch(favoriteVideosProvider).contains(video!)
                               ? Icons.bookmark

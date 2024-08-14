@@ -1,10 +1,7 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:myapp/authentication/controller/auth_controller.dart';
-import 'package:myapp/authentication/controller/supabase_provider.dart';
 import 'package:myapp/user/view_models/user_profiles_backend.dart';
 import 'package:myapp/utils/constant/constant.dart';
 import 'package:myapp/utils/error/view/error_view.dart';

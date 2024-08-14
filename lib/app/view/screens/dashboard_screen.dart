@@ -80,13 +80,7 @@ class DashboardEntryScreen extends ConsumerWidget {
                   return userDetails.when(
                     data: (data) {
                       return Text("Hello, ${data['username']}",
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineSmall
-                              ?.copyWith(
-                                  color: const Color(0xffDCC1FF),
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w400));
+                          style: Constant.appBarTitleStyle(context));
                     },
                     loading: () {
                       return const ShimmerText("Loading...",

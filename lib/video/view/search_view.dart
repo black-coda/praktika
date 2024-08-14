@@ -1,12 +1,11 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:myapp/app/view/widgets/header.dart';
 import 'package:myapp/app/view/widgets/video_card.dart';
-import 'package:myapp/authentication/controller/supabase_provider.dart';
 import 'package:myapp/utils/constant/constant.dart';
 import 'package:myapp/utils/widget/custom_tile_widget.dart';
-import 'package:myapp/video/controller/videos_controller.dart';
+import 'package:myapp/video/controller/search_and_filter_controllers.dart';
+
 import '../model/video_model.dart';
 import 'widget/search_widget.dart';
 
@@ -35,15 +34,15 @@ class _SearchViewState extends ConsumerState<SearchView> {
   @override
   Widget build(BuildContext context) {
     final isSearching = ref.watch(isSearchingProvider);
-    final searchResult = ref.watch(searchStateProvider);
+    final searchResult = ref.watch(filterStateProvider);
 
     return SafeArea(
       child: Scaffold(
-        body: CustomScrollView(
-          slivers: <Widget>[
-            SliverPadding(
-              padding: Constant.scaffoldPadding,
-              sliver: SliverToBoxAdapter(
+        body: Padding(
+          padding: Constant.scaffoldPadding,
+          child: CustomScrollView(
+            slivers: <Widget>[
+              SliverToBoxAdapter(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -61,9 +60,9 @@ class _SearchViewState extends ConsumerState<SearchView> {
                   ],
                 ),
               ),
-            ),
-            _buildSearchResults(isSearching, searchResult),
-          ],
+              _buildSearchResults(isSearching, searchResult),
+            ],
+          ),
         ),
       ),
     );
@@ -81,7 +80,14 @@ class _SearchViewState extends ConsumerState<SearchView> {
   }
 
   Widget _buildTopSearchChips() {
-    final topSearches = ['Flutter', 'Dart', 'Riverpod', 'UI', "Machine Learning", "Data Science"];
+    final topSearches = [
+      'Flutter',
+      'Dart',
+      'Riverpod',
+      'UI',
+      "Machine Learning",
+      "Data Science"
+    ];
     return Wrap(
       spacing: 8,
       runSpacing: 2,
@@ -100,15 +106,23 @@ class _SearchViewState extends ConsumerState<SearchView> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30),
       ),
-      onPressed: () {
+      onPressed: () async {
         _controller.text = label;
+        ref.read(isSearchingProvider.notifier).state = label.isNotEmpty;
+        await ref.watch(filterStateProvider.notifier).searchFunction(label);
         // Implement search functionality here
       },
     );
   }
 
   List<Widget> _buildCategoryFilters() {
-    final categories = ["UI/UX", "Illustrations", "Graphic design", "Marketing", "Business"];
+    final categories = [
+      "UI/UX",
+      "Illustrations",
+      "Graphic design",
+      "Marketing",
+      "Business"
+    ];
     return categories.map((category) {
       return CustomTile(
         title: category,
@@ -125,7 +139,7 @@ class _SearchViewState extends ConsumerState<SearchView> {
   }
 
   Widget _buildSearchResults(bool isSearching, List<Video> searchResult) {
-    if (!isSearching) return SliverToBoxAdapter();
+    if (!isSearching) return const SliverToBoxAdapter();
 
     if (searchResult.isEmpty) {
       return SliverToBoxAdapter(
@@ -157,8 +171,6 @@ class _SearchViewState extends ConsumerState<SearchView> {
   }
 
   void isCategoryFilterSelected(WidgetRef ref, String category) {
-    // Implement category filter functionality here
+    //TODO: Implement category filter functionality here
   }
 }
-
-final isSearchingProvider = StateProvider<bool>((ref) => false);

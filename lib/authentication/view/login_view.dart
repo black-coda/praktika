@@ -121,6 +121,7 @@ class _LoginViewState extends ConsumerState<LoginView>
                     width: double.infinity,
                     child: ElevatedButton(
                         onPressed: () async {
+                          
                           if (formKey.currentState!.validate()) {
                             final model = AuthDTO(
                                 email: emailController.text.trim(),

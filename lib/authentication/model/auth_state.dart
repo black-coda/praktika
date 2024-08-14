@@ -2,10 +2,10 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:myapp/authentication/controller/auth_controller.dart';
+
 import 'package:myapp/authentication/controller/supabase_provider.dart';
 import 'package:myapp/authentication/model/auth_dto.dart';
-import 'package:myapp/utils/constant/constant.dart';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 sealed class AuthResult {}
