@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:myapp/app/view/widgets/chip.dart';
 import 'package:myapp/app/view/widgets/header.dart';
 import 'package:myapp/utils/constant/constant.dart';
+import 'package:myapp/utils/toast/toast_manager.dart';
 import 'package:myapp/video/controller/search_and_filter_controllers.dart';
 import 'package:myapp/video/model/video_model.dart';
 
@@ -140,8 +141,14 @@ class SearchFilterView extends ConsumerWidget {
                 //* Apply Filter
                 TextButton(
                   onPressed: () {
-                    log("Apply Filter tapped", name: "Apply Filter");
-                    Navigator.of(context).pop();
+                    if (ref.watch(filterVideoProvider) == VideoType.all) {
+                      ToastManager().showToast(
+                          context, "A Type must be selected",
+                          duration: 2);
+                    } else {
+                      log("Apply Filter tapped", name: "Apply Filter");
+                      Navigator.of(context).pop();
+                    }
                   },
                   child: Text(
                     "Apply Filter",
