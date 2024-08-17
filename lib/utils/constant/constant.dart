@@ -30,6 +30,11 @@ class Constant {
         decorationColor: const Color(0xff6C6C6C),
         color: color ?? const Color(0xff6C6C6C),
       );
+
+  static const backgroundColorDark = Color(0xff1A1A1A);
+  static const backgroundColorPurple = Color(0xffDCC1FF);
+  static const backgroundColorYellow = Color(0xffF1EF76);
+  static const backgroundColorOrange = Color(0xffEC704B);
 }
 
 class SpacerConstant {

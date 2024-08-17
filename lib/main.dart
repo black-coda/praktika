@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myapp/authentication/controller/auth_controller.dart';
 import 'package:myapp/key.dart';
+import 'package:myapp/onboard/views/screen/onboard_entry_screen.dart';
 import 'package:myapp/utils/router/router_manager.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'app/view/screens/dashboard_screen.dart';
 import 'authentication/controller/supabase_provider.dart';
-import 'authentication/view/login_view.dart';
 import 'utils/loader/loading_screen_widget.dart';
 
 void main() async {
@@ -71,7 +71,7 @@ class App extends ConsumerWidget {
                 authState.session != null)) {
           return const DashboardView();
         } else {
-          return const LoginView();
+          return const OnboardEntryScreen();
         }
       },
       error: (error, stackTrace) {

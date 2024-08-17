@@ -7,6 +7,7 @@ import 'package:myapp/utils/widget/custom_tile_widget.dart';
 import 'package:myapp/video/controller/search_and_filter_controllers.dart';
 
 import '../model/video_model.dart';
+import 'courses_view.dart';
 import 'widget/search_widget.dart';
 
 class SearchView extends ConsumerStatefulWidget {
@@ -52,10 +53,10 @@ class _SearchViewState extends ConsumerState<SearchView> {
                       _buildHeader(context, "Top Search"),
                       SpacerConstant.sizedBox16,
                       _buildTopSearchChips(),
-                      SpacerConstant.sizedBox24,
-                      _buildHeader(context, "Categories"),
-                      SpacerConstant.sizedBox16,
-                      ..._buildCategoryFilters(),
+                      // SpacerConstant.sizedBox24,
+                      // _buildHeader(context, "Categories"),
+                      // SpacerConstant.sizedBox16,
+                      // ..._buildCategoryFilters(),
                     ],
                   ],
                 ),
@@ -160,9 +161,21 @@ class _SearchViewState extends ConsumerState<SearchView> {
       delegate: SliverChildBuilderDelegate(
         (context, index) {
           final video = searchResult[index];
-          return VideoDetailCard(
-            video: video,
-            index: index,
+          return GestureDetector(
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) {
+                  return CourseDetailView(
+                    video: video,
+                    index: index,
+                  );
+                },
+              ),
+            ),
+            child: VideoDetailCard(
+              video: video,
+              index: index,
+            ),
           );
         },
         childCount: searchResult.length,

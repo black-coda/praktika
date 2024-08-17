@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:myapp/utils/constant/constant.dart';
 import 'package:myapp/utils/extension/extension.dart';
@@ -25,12 +24,14 @@ class VideoCard extends StatelessWidget {
               ///? Navigate to the course detail view
               final Video video = videosList[index];
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) {
-                  return CourseDetailView(
-                    video: video,
-                    index: index,
-                  );
-                }),
+                MaterialPageRoute(
+                  builder: (context) {
+                    return CourseDetailView(
+                      video: video,
+                      index: index,
+                    );
+                  },
+                ),
               );
             },
             child: Padding(
@@ -69,7 +70,7 @@ class VideoCard extends StatelessWidget {
                         const Icon(Icons.favorite_border_outlined, size: 20)
                       ],
                     ),
-            //? price widget
+                    //? price widget
                     Positioned(
                       bottom: 35,
                       left: 0,

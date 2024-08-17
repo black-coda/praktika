@@ -99,26 +99,26 @@ final categorySearchFilterStateProvider = StateProvider<String?>(
   (ref) => null,
 );
 
-// final categorySearchFilterProvider = Provider<List<Video>>((ref) {
-//   final category = ref.watch(categorySearchFilterStateProvider);
+final categorySearchFilterProvider = Provider<List<Video>>((ref) {
+  final category = ref.watch(categorySearchFilterStateProvider);
 
-//   final videos = ref.watch(filterStateProvider);
+  final videos = ref.watch(filterStateProvider);
 
-//   if (category == null) {
-//     return videos; // Return all videos if no category is selected
-//   }
+  if (category == null) {
+    return videos; // Return all videos if no category is selected
+  }
 
-//   final categoryFilterMap = {
-//     'UI/UX': 'UI/UX',
-//     'Illustrations': 'Illustrations',
-//     'Graphic design': 'Graphic design',
-//     'Marketing': 'marketing',
-//     'Business': 'Business',
-//     'Web development': 'Web development',
-//     'Mobile development': 'Mobile development',
-//   };
+  final categoryFilterMap = {
+    'UI/UX': 'UI/UX',
+    'Illustrations': 'Illustrations',
+    'Graphic design': 'Graphic design',
+    'Marketing': 'marketing',
+    'Business': 'Business',
+    'Web development': 'Web development',
+    'Mobile development': 'Mobile development',
+  };
 
-//   return videos
-//       .where((video) => video.videoCategory == categoryFilterMap[category])
-//       .toList();
-// });
+  return videos
+      .where((video) => video.videoCategory == categoryFilterMap[category])
+      .toList();
+});

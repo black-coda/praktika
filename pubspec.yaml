@@ -31,7 +31,9 @@ dependencies:
   cupertino_icons: ^1.0.6
   flutter:
     sdk: flutter
+  flutter_animate: ^4.5.0
   flutter_riverpod: ^2.5.1
+  font_awesome_flutter: ^10.7.0
   freezed_annotation: ^2.4.4
   go_router: ^14.2.1
   google_fonts: ^6.2.1
@@ -40,14 +42,14 @@ dependencies:
   supabase_flutter: ^2.5.8
 
 dev_dependencies:
-  custom_lint: ^0.6.4
-  riverpod_lint: ^2.3.10
   build_runner: ^2.4.11
+  custom_lint: ^0.6.4
   flutter_lints: ^3.0.0
   flutter_test:
     sdk: flutter
   freezed: ^2.5.2
   json_serializable: ^6.8.0
+  riverpod_lint: ^2.3.10
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

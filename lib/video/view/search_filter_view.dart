@@ -165,6 +165,8 @@ class SearchFilterView extends ConsumerWidget {
                     ref
                         .watch(categorySearchFilterStateProvider.notifier)
                         .state = null;
+
+                    Navigator.of(context).pop();
                   },
                   child: Text(
                     "Clear Filter",

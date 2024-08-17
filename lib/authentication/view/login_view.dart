@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:myapp/authentication/controller/auth_controller.dart';
 import 'package:myapp/authentication/model/auth_dto.dart';
@@ -24,11 +25,6 @@ class _LoginViewState extends ConsumerState<LoginView>
   late TextEditingController passwordController;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  //! animation controller
-  late AnimationController _animationController;
-  late Animation<double> _animation;
-  late Animation<double> _opacityAnimation;
-
   @override
   void initState() {
     super.initState();
@@ -37,21 +33,6 @@ class _LoginViewState extends ConsumerState<LoginView>
     passwordController = TextEditingController();
 
     //! animation controller
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 1),
-    )..repeat(reverse: true);
-
-    // _animation = CurvedAnimation(
-    //   parent: _animationController,
-    //   curve: Curves.bounceInOut,
-    // );
-
-    _animation = Tween<double>(begin: 50, end: 0).animate(_animationController);
-    _opacityAnimation =
-        Tween<double>(begin: 0, end: 1).animate(_animationController);
-
-    _animationController.forward();
   }
 
   @override
@@ -59,7 +40,7 @@ class _LoginViewState extends ConsumerState<LoginView>
     WidgetsBinding.instance.removeObserver(this);
     emailController.dispose();
     passwordController.dispose();
-    _animationController.dispose();
+
     super.dispose();
   }
 
@@ -81,30 +62,13 @@ class _LoginViewState extends ConsumerState<LoginView>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  AnimatedBuilder(
-                    animation: _animation,
-                    // child: child,
-                    builder: (BuildContext context, Widget? child) {
-                      // log(_animation.value.toString());
-                      return Transform.translate(
-                        offset: Offset(0, _animation.value),
-                        child: AnimatedOpacity(
-                          opacity: _opacityAnimation.value,
-                          duration: const Duration(seconds: 3),
-                          child: Text(
-                            "Hello\nagain!",
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineLarge
-                                ?.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                            textAlign: TextAlign.center,
-                          ),
+                  Text(
+                    "Hello\nagain!",
+                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
-                      );
-                    },
+                    textAlign: TextAlign.center,
                   ),
                   SizedBox(
                     height: MediaQuery.sizeOf(context).height * 0.1,
@@ -121,7 +85,6 @@ class _LoginViewState extends ConsumerState<LoginView>
                     width: double.infinity,
                     child: ElevatedButton(
                         onPressed: () async {
-                          
                           if (formKey.currentState!.validate()) {
                             final model = AuthDTO(
                                 email: emailController.text.trim(),
@@ -151,7 +114,7 @@ class _LoginViewState extends ConsumerState<LoginView>
                         child: const Text("Log in")),
                   ),
                   SizedBox(height: MediaQuery.sizeOf(context).height * 0.2),
-                  //? sign up
+                  //? navigate to sign up screen
                   GestureDetector(
                     onTap: () {
                       Navigator.pushNamed(context, RouterManager.registerRoute);
@@ -179,7 +142,11 @@ class _LoginViewState extends ConsumerState<LoginView>
                       ),
                     ),
                   ),
-                ],
+                ]
+                    .animate(interval: 400.ms)
+                    .fadeIn()
+                    .moveX(delay: 100.ms, duration: 800.ms)
+                    ,
               ),
             ),
           ),
