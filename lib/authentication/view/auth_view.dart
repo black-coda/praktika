@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:myapp/utils/constant/constant.dart';
+import 'package:myapp/utils/extension/extension.dart';
 import 'package:myapp/utils/router/router_manager.dart';
 
 class AuthView extends ConsumerWidget {
@@ -57,14 +58,21 @@ class AuthView extends ConsumerWidget {
             SizedBox(height: MediaQuery.sizeOf(context).height * 0.3),
             GestureDetector(
               onTap: () {
-                Navigator.pushNamed(context, RouterManager.registerRoute);
+                ///* Navigate to the opposite view
+                ///* If the current view is login, navigate to register view
+                ///* If the current view is register, navigate to login view
+                isLogin
+                    ? Navigator.of(context)
+                        .animateTo(const AuthView(isLogin: false))
+                    : Navigator.of(context)
+                        .animateTo(const AuthView(isLogin: true));
               },
               child: RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: "Sign up  >",
+                      text: isLogin ? "Sign up  >" : "Sign in  >",
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Colors.white,
                             decoration: TextDecoration.underline,

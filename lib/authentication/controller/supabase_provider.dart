@@ -11,4 +11,3 @@ final authStreamProvider = StreamProvider<AuthState>((ref) async* {
     return event;
   });
 });
-

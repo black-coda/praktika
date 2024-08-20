@@ -25,12 +25,10 @@ class VideoCard extends StatelessWidget {
               final Video video = videosList[index];
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) {
-                    return CourseDetailView(
-                      video: video,
-                      index: index,
-                    );
-                  },
+                  builder: (context) => CourseDetailView(
+                    video: video,
+                    index: index,
+                  ),
                 ),
               );
             },

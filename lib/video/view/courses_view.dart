@@ -4,6 +4,11 @@ import 'package:myapp/app/view/widgets/video_card.dart';
 import 'package:myapp/utils/constant/constant.dart';
 import 'package:myapp/video/controller/videos_controller.dart';
 import 'package:myapp/video/model/video_model.dart';
+import 'package:myapp/video/view/video_player_view.dart';
+
+
+
+
 
 class CourseDetailView extends ConsumerWidget {
   const CourseDetailView({super.key, this.video, this.index});
@@ -28,12 +33,21 @@ class CourseDetailView extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ///? video detail card
-              VideoDetailCard(
-                video: video!,
-                index: index!,
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return VideoPlayerView(
+                      video: video!,
+                      index: index!,
+                    );
+                  }),);
+                },
+                child: VideoDetailCard(
+                  video: video!,
+                  index: index!,
+                ),
               ),
-
-              const Divider(color: Colors.white),
 
               ///? Title
               SpacerConstant.sizedBox20,
@@ -47,10 +61,12 @@ class CourseDetailView extends ConsumerWidget {
               SpacerConstant.sizedBox20,
               //? Description
               Text(
-                "Discover the power of Flutter! This video covers the essentials of building beautiful, native-like apps for iOS and Android using a single codebase. From installation to creating your first app, we've got you covered.",
+                video!.description.isNotEmpty
+                    ? video!.description
+                    : "Discover the power of Flutter! This video covers the essentials of building beautiful, native-like apps for iOS and Android using a single codebase. From installation to creating your first app, we've got you covered.",
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: 13,
                     fontWeight: FontWeight.w200),
                 textAlign: TextAlign.justify,
               ),
@@ -80,7 +96,9 @@ class CourseDetailView extends ConsumerWidget {
                           : ref
                               .watch(videoNotifierProvider.notifier)
                               .addToMyLearning(video!.id);
-                      ref.refresh(videoNotifierProvider.notifier).fetchVideosFromDB();
+                      ref
+                          .refresh(videoNotifierProvider.notifier)
+                          .fetchVideosFromDB();
                       // await ref
                       //     .watch(videoNotifierProvider.notifier)
                       //     .fetchVideosFromDB();

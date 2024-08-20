@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:myapp/authentication/controller/auth_controller.dart';
+import 'package:myapp/authentication/controller/supabase_provider.dart';
 import 'package:myapp/authentication/model/auth_dto.dart';
 import 'package:myapp/authentication/model/auth_state.dart';
 import 'package:myapp/utils/constant/constant.dart';
+import 'package:myapp/utils/extension/extension.dart';
 import 'package:myapp/utils/router/router_manager.dart';
 import 'package:myapp/utils/toast/toast_manager.dart';
 
+import 'auth_view.dart';
 import 'widget/input_widget.dart';
 
 class LoginView extends ConsumerStatefulWidget {
@@ -117,7 +120,8 @@ class _LoginViewState extends ConsumerState<LoginView>
                   //? navigate to sign up screen
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, RouterManager.registerRoute);
+                      Navigator.of(context)
+                          .animateTo(const AuthView(isLogin: false));
                     },
                     child: RichText(
                       textAlign: TextAlign.center,
@@ -145,8 +149,7 @@ class _LoginViewState extends ConsumerState<LoginView>
                 ]
                     .animate(interval: 400.ms)
                     .fadeIn()
-                    .moveX(delay: 100.ms, duration: 800.ms)
-                    ,
+                    .moveX(delay: 100.ms, duration: 800.ms),
               ),
             ),
           ),

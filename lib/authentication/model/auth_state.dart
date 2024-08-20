@@ -1,10 +1,14 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:myapp/app/view/screens/dashboard_screen.dart';
 
 import 'package:myapp/authentication/controller/supabase_provider.dart';
 import 'package:myapp/authentication/model/auth_dto.dart';
+import 'package:myapp/onboard/views/screen/onboard_entry_screen.dart';
+import 'package:myapp/utils/extension/extension.dart';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -57,13 +61,14 @@ class Authenticator {
     }
   }
 
-  Future<void> loginWithEmailAndPassword(AuthDTO model) async {
+  Future<Session> loginWithEmailAndPassword(AuthDTO model) async {
     try {
       final supabaseClient = ref.read(supabaseProvider);
-      await supabaseClient.auth.signInWithPassword(
+      final response = await supabaseClient.auth.signInWithPassword(
         email: model.email,
         password: model.password,
       );
+      return response.session!;
     } on AuthException {
       rethrow;
     }
@@ -103,7 +108,9 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
   Future<AuthResult> loginWithEmailAndPassword(AuthDTO model) async {
     try {
       setIsLoading(true);
-      await authenticator.loginWithEmailAndPassword(model);
+      final responseSession =
+          await authenticator.loginWithEmailAndPassword(model);
+      state = AuthState(session: responseSession, isLoading: false);
       return Success(msg: "login successful 🥰");
     } on SocketException catch (e) {
       log(e.toString());
@@ -127,7 +134,7 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
       return Success(msg: "account created successful 🥰");
     } on AuthException catch (e) {
       log(e.message, name: "Registration AuthException");
-      return Error(msg: "${e.statusCode}: ${e.message}");
+      return Error(msg: e.message);
     } finally {
       setIsLoading(false);
     }
@@ -142,5 +149,22 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
     } finally {
       setIsLoading(false);
     }
+  }
+
+  void initialization(context) {
+    final supabaseClient = ref.watch(supabaseProvider);
+    supabaseClient.auth.onAuthStateChange.listen((data) {
+      final AuthChangeEvent event = data.event;
+      final Session? session = data.session;
+      if (event == AuthChangeEvent.signedIn) {
+        Navigator.of(context).animateTo(const DashboardView());
+      }
+      if (event == AuthChangeEvent.initialSession && session != null) {
+        Navigator.of(context).animateTo(const DashboardView());
+      }
+      if (event == AuthChangeEvent.signedOut) {
+        Navigator.of(context).animateTo(const OnboardEntryScreen());
+      }
+    });
   }
 }

@@ -12,7 +12,3 @@ final authStateNotifierProvider =
 });
 
 
-final authLoadingStateProvider = Provider<bool>((ref) {
-  final authState = ref.watch(authStateNotifierProvider);
-  return authState.isLoading;
-});

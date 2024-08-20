@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:myapp/authentication/view/auth_view.dart';
 import 'package:myapp/utils/constant/constant.dart';
+import 'package:myapp/utils/extension/extension.dart';
 
 class OnboardScreen3 extends StatelessWidget {
   const OnboardScreen3({super.key, required this.controller});
@@ -34,7 +35,8 @@ class OnboardScreen3 extends StatelessWidget {
               TextButton(
                 onPressed: () => {
                   log("to auth view", name: "OnboardScreen3"),
-                  Navigator.of(context).push(_createRoute()),
+                  Navigator.of(context)
+                      .animateTo(const AuthView(isLogin: true)),
                 },
                 child: Text(
                   "Next",
@@ -54,21 +56,4 @@ class OnboardScreen3 extends StatelessWidget {
   }
 }
 
-Route _createRoute() {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) =>
-        const AuthView(isLogin: true),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      const begin = Offset(0.0, 1.0);
-      const end = Offset.zero;
-      const curve = Curves.ease;
 
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: child,
-      );
-    },
-  );
-}

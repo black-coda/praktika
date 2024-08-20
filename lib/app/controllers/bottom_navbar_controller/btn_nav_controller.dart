@@ -6,6 +6,7 @@ import 'package:myapp/user/view_models/user_profiles_backend.dart';
 import 'package:myapp/utils/error/view/error_view.dart';
 import 'package:myapp/video/view/my_learning_view.dart';
 import 'package:myapp/video/view/search_view.dart';
+import 'package:myapp/video/view/video_player_view.dart';
 
 final indexProvider = StateProvider<int>((ref) {
   return 0;
@@ -16,10 +17,7 @@ final navBarScreenProvider = Provider.family<Widget, int>((ref, index) {
     const DashboardEntryScreen(),
     const SearchView(),
     const MyLearningView(),
-    ErrorView(
-      errorMessage: "User Profile Error",
-      providerClass: userProfileBackendFutureProvider,
-    ),
+   Container(color: Colors.red),
     const UserProfileView(),
   ];
   return screens[index];

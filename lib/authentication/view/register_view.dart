@@ -109,7 +109,7 @@ class _RegisterViewState extends ConsumerState<RegisterView>
                                     context, "Account create successful 🥰");
 
                               case Error():
-                                ToastManager().showToast(context, "Failure 😢");
+                                ToastManager().showToast(context, msg.msg);
                             }
                           }
                         },

@@ -12,6 +12,8 @@ class Video {
   final Duration duration;
   final bool isFavorite;
   final String description;
+  final String videoUrl;
+  final String material_url;
 
   Video({
     required this.id,
@@ -22,6 +24,8 @@ class Video {
     required this.duration,
     this.isFavorite = false,
     this.description = '',
+    this.videoUrl = '',
+    this.material_url = '',
   });
 
   // Parse a HH:MM:SS string to a Duration
@@ -43,6 +47,7 @@ class Video {
       duration: map["duration"].toString().durationFromString(),
       isFavorite: isFavorite,
       description: map['description'] as String,
+      videoUrl: map['video_url'] as String,
     );
   }
 
