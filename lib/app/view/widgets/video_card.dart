@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/utils/constant/constant.dart';
 import 'package:myapp/utils/extension/extension.dart';
-import 'package:myapp/video/model/video_model.dart';
-import 'package:myapp/video/view/courses_view.dart';
+import 'package:myapp/features/video/model/video_model.dart';
+import 'package:myapp/features/video/view/courses_view.dart';
 import 'rating_button.dart';
 
 class VideoCard extends StatelessWidget {

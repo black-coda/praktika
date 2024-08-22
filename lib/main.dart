@@ -3,17 +3,20 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:myapp/authentication/controller/auth_controller.dart';
-import 'package:myapp/authentication/controller/is_logged_in_provider.dart';
-import 'package:myapp/authentication/view/login_view.dart';
+import 'package:myapp/features/authentication/controller/auth_controller.dart';
+import 'package:myapp/features/authentication/controller/is_logged_in_provider.dart';
+import 'package:myapp/features/authentication/view/login_view.dart';
 import 'package:myapp/key.dart';
-import 'package:myapp/onboard/views/screen/onboard_entry_screen.dart';
+import 'package:myapp/app/onboard/views/screen/onboard_entry_screen.dart';
 import 'package:myapp/utils/router/router_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'app/view/screens/dashboard_screen.dart';
-import 'authentication/controller/is_loading_provider.dart';
-import 'authentication/controller/supabase_provider.dart';
+import 'features/authentication/controller/is_loading_provider.dart';
+import 'features/authentication/controller/supabase_provider.dart';
+import 'features/authentication/view/auth_view.dart';
+import 'features/authentication/view/logout_view.dart';
+import 'utils/constant/constant.dart';
 import 'utils/loader/loading_screen_widget.dart';
 
 void main() async {
@@ -38,10 +41,10 @@ class AppEntry extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        scaffoldBackgroundColor: const Color(0xff1A1A1A),
+        scaffoldBackgroundColor: Constant.backgroundColorDark,
         textTheme: GoogleFonts.unboundedTextTheme(),
         appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xff1A1A1A),
+          backgroundColor: Constant.backgroundColorDark,
         ),
         useMaterial3: true,
       ),
@@ -126,7 +129,7 @@ class _AppState extends ConsumerState<App> {
                 authState.session != null)) {
           return const DashboardView();
         } else {
-          return const LoginView();
+          return const LogoutView();
         }
       },
       error: (error, stackTrace) {

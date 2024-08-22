@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:myapp/app/view/screens/dashboard_screen.dart';
-import 'package:myapp/authentication/view/login_view.dart';
-import 'package:myapp/authentication/view/register_view.dart';
-import 'package:myapp/user/view/profile_view.dart';
-import 'package:myapp/video/view/courses_view.dart';
-import 'package:myapp/video/view/search_filter_view.dart';
+import 'package:myapp/features/authentication/view/login_view.dart';
+import 'package:myapp/features/authentication/view/register_view.dart';
+import 'package:myapp/features/user/view/profile_view.dart';
+import 'package:myapp/features/video/view/courses_view.dart';
+import 'package:myapp/features/video/view/search_filter_view.dart';
 
 final routerManagerProvider = Provider<GoRouter>(
   (ref) {

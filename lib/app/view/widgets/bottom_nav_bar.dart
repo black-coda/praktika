@@ -50,8 +50,8 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
           backgroundColor: Colors.transparent,
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.work_outline_rounded),
-          label: 'Home',
+          icon: Icon(Icons.cases_outlined),
+          label: 'Career',
           backgroundColor: Colors.transparent,
         ),
         BottomNavigationBarItem(
