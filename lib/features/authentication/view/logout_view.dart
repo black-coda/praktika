@@ -21,7 +21,7 @@ class LogoutView extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                "Let's start\nyour\njourney",
+                "Let's start\nyour\nJourney",
                 style: Theme.of(context).textTheme.displaySmall!.copyWith(
                       color: Constant.backgroundColorDark,
                       fontWeight: FontWeight.bold,
