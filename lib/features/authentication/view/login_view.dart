@@ -11,6 +11,7 @@ import 'package:myapp/utils/constant/constant.dart';
 import 'package:myapp/utils/extension/extension.dart';
 import 'package:myapp/utils/router/router_manager.dart';
 import 'package:myapp/utils/toast/toast_manager.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'auth_view.dart';
 import 'widget/input_widget.dart';
@@ -99,6 +100,7 @@ class _LoginViewState extends ConsumerState<LoginView>
                               case Success():
                                 ToastManager()
                                     .showToast(context, "Login successful 🥰");
+                      Navigator.of(context).pushNamedAndRemoveUntil(RouterManager.homeRoute, (route) => false);
 
                               case Error():
                                 ToastManager().showToast(context, msg.msg);

@@ -1,11 +1,13 @@
+import 'dart:async';
 import 'dart:developer';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myapp/features/authentication/controller/auth_controller.dart';
-import 'package:myapp/features/authentication/controller/is_logged_in_provider.dart';
-import 'package:myapp/features/authentication/view/login_view.dart';
 import 'package:myapp/key.dart';
 import 'package:myapp/app/onboard/views/screen/onboard_entry_screen.dart';
 import 'package:myapp/utils/router/router_manager.dart';
@@ -13,8 +15,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'app/view/screens/dashboard_screen.dart';
 import 'features/authentication/controller/is_loading_provider.dart';
+import 'features/authentication/controller/is_logged_in_provider.dart';
 import 'features/authentication/controller/supabase_provider.dart';
-import 'features/authentication/view/auth_view.dart';
 import 'features/authentication/view/logout_view.dart';
 import 'utils/constant/constant.dart';
 import 'utils/loader/loading_screen_widget.dart';
@@ -83,13 +85,58 @@ class App extends ConsumerStatefulWidget {
 
 class _AppState extends ConsumerState<App> {
   bool? _isFirstTime;
+//? Check for internet connection
+  List<ConnectivityResult> _connectionStatus = [ConnectivityResult.none];
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
 
   @override
   void initState() {
     super.initState();
+    initConnectivity();
+
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+
     _checkFirstTimeOpening();
+    ref.read(isLoggedInProvider);
   }
 
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
+  Future<void> initConnectivity() async {
+    late List<ConnectivityResult> result;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      log('Couldn\'t check connectivity status', error: e);
+      return;
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) {
+      return Future.value(null);
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(List<ConnectivityResult> result) async {
+    setState(() {
+      _connectionStatus = result;
+    });
+    // ignore: avoid_print
+    print('Connectivity changed: $_connectionStatus');
+  }
+
+  //? check for first time installation
   Future<void> _checkFirstTimeOpening() async {
     final prefs = await SharedPreferences.getInstance();
     final isFirstTime = prefs.getBool('isFirstTime') ?? true;
@@ -104,8 +151,52 @@ class _AppState extends ConsumerState<App> {
     });
   }
 
+  //? verifying network request
+  Future<bool> hasInternetConnection() async {
+    try {
+      final dio = Dio();
+      final result = await dio.get('https://www.google.com');
+      if (result.statusCode == 200) {
+        return true; // Connected to the internet
+      }
+    } catch (e) {
+      return false; // No internet connection
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (_connectionStatus.contains(ConnectivityResult.none)) {
+      return const Scaffold(
+        body: Center(
+          child: Column(
+            children: [
+              Text(
+                "No Internet Connection",
+                style: TextStyle(color: Colors.red),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    if (hasInternetConnection() == false) {
+      return const Scaffold(
+        body: Center(
+          child: Column(
+            children: [
+              Text(
+                "No Internet Connection",
+                style: TextStyle(color: Colors.red),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     if (_isFirstTime == null) {
       // Still checking if it's the first time, show a loading indicator
       return const Scaffold(

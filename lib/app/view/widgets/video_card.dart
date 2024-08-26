@@ -51,8 +51,9 @@ class VideoCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        //? Title
                         SizedBox(
-                          width: 200,
+                          width: 205,
                           child: Text(
                             videosList[index].title,
                             style: Theme.of(context)
@@ -63,6 +64,8 @@ class VideoCard extends StatelessWidget {
                                   fontWeight: FontWeight.w500,
                                   fontSize: 20,
                                 ),
+                            overflow: TextOverflow.fade,
+                            maxLines: 3,
                           ),
                         ),
                         const Icon(Icons.favorite_border_outlined, size: 20)
@@ -112,8 +115,7 @@ class VideoCard extends StatelessWidget {
                         ],
                       ),
                     ),
-
-                    //? price, tags,
+// ? image
                     Align(
                       alignment: Alignment.bottomRight,
                       widthFactor: 0,
@@ -181,6 +183,8 @@ class VideoDetailCard extends StatelessWidget {
                                 fontWeight: FontWeight.w500,
                                 fontSize: 32,
                               ),
+                          overflow: TextOverflow.fade,
+                          maxLines: 3,
                         ),
                       ),
                       const Icon(Icons.favorite_border_outlined, size: 20)

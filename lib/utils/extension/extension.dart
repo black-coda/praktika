@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 extension DurationParsing on String {
@@ -81,4 +84,12 @@ extension CustomNavigatorExtension on NavigatorState {
       ),
     );
   }
+}
+
+
+
+//? extension to  Check for internet availability
+extension DioErrorX on DioException {
+  bool get isNoConnectionError =>
+      type == DioExceptionType.unknown && error == SocketException;
 }
