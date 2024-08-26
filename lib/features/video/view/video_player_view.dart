@@ -165,7 +165,7 @@ class _VideoPlayerView2State extends ConsumerState<VideoPlayerView> {
             }
           });
         },
-        backgroundColor: Constant.coloringMethod(widget.index!),
+        backgroundColor: Constant.generateColor(widget.index!),
         foregroundColor: Colors.white,
         // Display the correct icon depending on the state of the player.
         child: Icon(

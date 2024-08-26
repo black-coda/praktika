@@ -161,7 +161,7 @@ class VideoDetailCard extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: Constant.coloringMethod(index),
+                color: Constant.generateColor(index),
               ),
               padding: const EdgeInsets.all(10),
               width: double.maxFinite,
