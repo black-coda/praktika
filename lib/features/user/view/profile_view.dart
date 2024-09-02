@@ -7,6 +7,8 @@ import 'package:myapp/utils/error/view/error_view.dart';
 import 'package:myapp/utils/loader/simmer_text.dart';
 import 'package:myapp/utils/widget/custom_tile_widget.dart';
 
+import '../controller/user_controller.dart';
+
 class UserProfileView extends ConsumerStatefulWidget {
   const UserProfileView({super.key});
 

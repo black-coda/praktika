@@ -12,37 +12,29 @@ import 'package:myapp/utils/extension/extension.dart';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-sealed class AuthResult {}
-
-class Success implements AuthResult {
-  final String msg;
-
-  Success({required this.msg});
-}
-
-class Error implements AuthResult {
-  final String msg;
-
-  Error({required this.msg});
-}
+import 'auth_result.dart';
 
 class AuthState {
   final Session? session;
   final bool isLoading;
+  final AuthResult? result;
 
-  AuthState({this.session, required this.isLoading});
+  AuthState({this.session, required this.isLoading, this.result});
 
   AuthState.defaultState()
       : session = null,
-        isLoading = false;
+        isLoading = false,
+        result = null;
 
   AuthState copyWithForIsLoading({
     bool? isLoading,
     Session? session,
+    AuthResult? result,
   }) {
     return AuthState(
       session: session ?? this.session,
       isLoading: isLoading ?? this.isLoading,
+      result: result ?? this.result,
     );
   }
 }
@@ -105,19 +97,24 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
     state = state.copyWithForIsLoading(isLoading: isLoading);
   }
 
-  Future<AuthResult> loginWithEmailAndPassword(AuthDTO model) async {
+  Future<void> loginWithEmailAndPassword(AuthDTO model) async {
     try {
       setIsLoading(true);
       final responseSession =
           await authenticator.loginWithEmailAndPassword(model);
-      state = AuthState(session: responseSession, isLoading: false);
-      return Success(msg: "login successful 🥰");
+      state = AuthState(
+          session: responseSession,
+          isLoading: false,
+          result: Success(msg: "login successful 🥰"));
+      log(state.session != null ? "Logged in" : "Not logged in");
     } on SocketException catch (e) {
       log(e.toString());
-      return Error(msg: "No internet available 🤌");
+      state = AuthState(
+          session: null, isLoading: false, result: Error(msg: e.message));
     } on AuthException catch (e) {
       log(e.message);
-      return Error(msg: e.message);
+      state = AuthState(
+          session: null, isLoading: false, result: Error(msg: e.message));
     } finally {
       setIsLoading(false);
     }

@@ -52,6 +52,9 @@ class AppEntry extends ConsumerWidget {
       ),
       home: Consumer(
         builder: (context, ref, child) {
+          
+          
+          //* display loading screen when isLoading is true
           ref.listen<bool>(
             authLoadingStateProvider,
             (previous, next) {
@@ -68,7 +71,7 @@ class AppEntry extends ConsumerWidget {
             },
           );
 
-          return const App();
+          return const App3();
         },
       ),
       onGenerateRoute: MaterialRouteManager.generateRoute,
@@ -93,6 +96,7 @@ class _AppState extends ConsumerState<App> {
   @override
   void initState() {
     super.initState();
+    ref.read(authStreamProvider);
     initConnectivity();
 
     _connectivitySubscription =
@@ -155,7 +159,7 @@ class _AppState extends ConsumerState<App> {
   Future<bool> hasInternetConnection() async {
     try {
       final dio = Dio();
-      final result = await dio.get('https://www.google.com');
+      final result = await dio.get(Constant.googleUrl);
       if (result.statusCode == 200) {
         return true; // Connected to the internet
       }
@@ -186,6 +190,7 @@ class _AppState extends ConsumerState<App> {
       return const Scaffold(
         body: Center(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 "No Internet Connection",
@@ -215,13 +220,15 @@ class _AppState extends ConsumerState<App> {
 
     return authStateAsyncValue.when(
       data: (authState) {
-        if (authState.event == AuthChangeEvent.signedIn ||
-            (authState.event == AuthChangeEvent.initialSession &&
-                authState.session != null)) {
+        if (authState.event == AuthChangeEvent.signedIn) {
           return const DashboardView();
-        } else {
-          return const LogoutView();
         }
+        if (authState.event == AuthChangeEvent.initialSession &&
+            authState.session != null) {
+          log((authState.session == null).toString(), name: "App Entry");
+          return const DashboardView();
+        }
+        return const LogoutView();
       },
       error: (error, stackTrace) {
         return Scaffold(
@@ -244,50 +251,6 @@ class _AppState extends ConsumerState<App> {
   }
 }
 
-class App2 extends ConsumerStatefulWidget {
-  const App2({super.key});
-
-  @override
-  ConsumerState<App2> createState() => _App2State();
-}
-
-class _App2State extends ConsumerState<App2> {
-  @override
-  Widget build(BuildContext context) {
-    final supabase = ref.watch(supabaseProvider);
-    return StreamBuilder(
-      stream: supabase.auth.onAuthStateChange,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        }
-        if (snapshot.hasError) {
-          return Scaffold(
-            body: Center(
-              child: Text(
-                snapshot.error.toString(),
-                style: const TextStyle(color: Colors.red),
-              ),
-            ),
-          );
-        }
-
-        final AuthChangeEvent event = snapshot.data!.event;
-        final Session? session = snapshot.data!.session;
-        log("$event \n $session", name: "App Entry Stream");
-        if (event == AuthChangeEvent.signedIn || (session != null)) {
-          return const DashboardView();
-        }
-        return const OnboardEntryScreen();
-      },
-    );
-  }
-}
-
 class App3 extends ConsumerStatefulWidget {
   const App3({super.key});
 
@@ -296,20 +259,136 @@ class App3 extends ConsumerStatefulWidget {
 }
 
 class _App3State extends ConsumerState<App3> {
+  bool? _isFirstTime;
+//? Check for internet connection
+  List<ConnectivityResult> _connectionStatus = [ConnectivityResult.none];
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
+
   @override
   void initState() {
     super.initState();
-    ref.read(authStateNotifierProvider.notifier).initialization(context);
+    ref.read(authStreamProvider);
+    initConnectivity();
+
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+
+    _checkFirstTimeOpening();
+    ref.read(isLoggedInProvider);
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
+  Future<void> initConnectivity() async {
+    late List<ConnectivityResult> result;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      log('Couldn\'t check connectivity status', error: e);
+      return;
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) {
+      return Future.value(null);
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(List<ConnectivityResult> result) async {
+    setState(() {
+      _connectionStatus = result;
+    });
+    // ignore: avoid_print
+    print('Connectivity changed: $_connectionStatus');
+  }
+
+  //? check for first time installation
+  Future<void> _checkFirstTimeOpening() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isFirstTime = prefs.getBool('isFirstTime') ?? true;
+
+    if (isFirstTime) {
+      // Mark the app as opened for the first time
+      await prefs.setBool('isFirstTime', false);
+    }
+
+    setState(() {
+      _isFirstTime = isFirstTime;
+    });
+  }
+
+  //? verifying network request
+  Future<bool> hasInternetConnection() async {
+    try {
+      final dio = Dio();
+      final result = await dio.get(Constant.googleUrl);
+      if (result.statusCode == 200) {
+        return true; // Connected to the internet
+      }
+    } catch (e) {
+      return false; // No internet connection
+    }
+    return false;
   }
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: SafeArea(
-        child: Center(
+    if (_connectionStatus.contains(ConnectivityResult.none)) {
+      return const Scaffold(
+        body: Center(
+          child: Column(
+            children: [
+              Text(
+                "No Internet Connection",
+                style: TextStyle(color: Colors.red),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    if (hasInternetConnection() == false) {
+      return const Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "No Internet Connection",
+                style: TextStyle(color: Colors.red),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    if (_isFirstTime == null) {
+      // Still checking if it's the first time, show a loading indicator
+      return const Scaffold(
+        body: Center(
           child: CircularProgressIndicator(),
         ),
-      ),
-    );
+      );
+    }
+    if (_isFirstTime == true) {
+      // Show onboarding or welcome screen if it's the first time
+      return const OnboardEntryScreen();
+    }
+
+    final isLoggedInState = ref.watch(isLoggedInProvider);
+    log(isLoggedInState.toString(), name: "Check for login state");
+    return isLoggedInState ? const DashboardView() : const LogoutView();
   }
 }

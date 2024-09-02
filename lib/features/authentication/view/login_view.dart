@@ -4,15 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:myapp/features/authentication/controller/auth_controller.dart';
-import 'package:myapp/features/authentication/controller/supabase_provider.dart';
 import 'package:myapp/features/authentication/model/auth_dto.dart';
-import 'package:myapp/features/authentication/model/auth_state.dart';
 import 'package:myapp/utils/constant/constant.dart';
 import 'package:myapp/utils/extension/extension.dart';
-import 'package:myapp/utils/router/router_manager.dart';
 import 'package:myapp/utils/toast/toast_manager.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../model/auth_result.dart';
 import 'auth_view.dart';
 import 'widget/input_widget.dart';
 
@@ -56,6 +53,7 @@ class _LoginViewState extends ConsumerState<LoginView>
 
   @override
   Widget build(BuildContext context) {
+    final authResult = ref.watch(authStateNotifierProvider).result;
     return Scaffold(
       body: SafeArea(
         child: Form(
@@ -93,18 +91,22 @@ class _LoginViewState extends ConsumerState<LoginView>
                             final model = AuthDTO(
                                 email: emailController.text.trim(),
                                 password: passwordController.text.trim());
-                            final msg = await ref
+                            await ref
                                 .read(authStateNotifierProvider.notifier)
-                                .loginWithEmailAndPassword(model);
-                            switch (msg) {
-                              case Success():
-                                ToastManager()
-                                    .showToast(context, "Login successful 🥰");
-                      Navigator.of(context).pushNamedAndRemoveUntil(RouterManager.homeRoute, (route) => false);
-
-                              case Error():
-                                ToastManager().showToast(context, msg.msg);
-                            }
+                                .loginWithEmailAndPassword(model)
+                                .then((_) {
+                              if (authResult != null) {
+                                log(authResult.toString());
+                                switch (authResult) {
+                                  case Success():
+                                    ToastManager()
+                                        .showToast(context, authResult.msg!);
+                                  case Error():
+                                    ToastManager()
+                                        .showToast(context, authResult.msg!);
+                                }
+                              }
+                            });
                           }
                         },
                         style: ElevatedButton.styleFrom(
@@ -149,9 +151,9 @@ class _LoginViewState extends ConsumerState<LoginView>
                     ),
                   ),
                 ]
-                    .animate(interval: 400.ms)
-                    .fadeIn()
-                    .moveX(delay: 100.ms, duration: 800.ms),
+                    .animate(interval: 100.ms)
+                    .fadeIn(duration: 300.ms)
+                    .moveX(delay: 100.ms),
               ),
             ),
           ),

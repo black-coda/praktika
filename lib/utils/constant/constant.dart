@@ -5,6 +5,9 @@ class Constant {
   static const String videoTable = 'videos';
   static const String reviewTable = "reviews";
   static const String favoriteTable = "my_learning";
+
+  // google url
+  static const String googleUrl = "https://www.google.com";
   static const scaffoldPadding =
       EdgeInsets.symmetric(vertical: 32, horizontal: 16);
 

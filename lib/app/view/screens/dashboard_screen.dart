@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:myapp/app/controllers/bottom_navbar_controller/btn_nav_controller.dart';
 import 'package:myapp/app/view/widgets/bottom_nav_bar.dart';
 import 'package:myapp/app/view/widgets/chip.dart';
+import 'package:myapp/features/user/controller/user_controller.dart';
 import 'package:myapp/features/user/view_models/user_profiles_backend.dart';
 import 'package:myapp/utils/constant/constant.dart';
 import 'package:myapp/utils/loader/simmer_text.dart';

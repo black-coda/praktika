@@ -25,11 +25,3 @@ class UserProfilesBackend {
   }
 }
 
-final userDetailsProvider = Provider<UserProfilesBackend>((ref) {
-  return UserProfilesBackend(ref);
-});
-
-final userProfileBackendFutureProvider =
-    FutureProvider.autoDispose<Map<String, dynamic>>((ref) async {
-  return await UserProfilesBackend(ref).getUserDetails();
-});

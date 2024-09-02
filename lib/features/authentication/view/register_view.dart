@@ -9,6 +9,7 @@ import 'package:myapp/utils/constant/constant.dart';
 import 'package:myapp/utils/router/router_manager.dart';
 import 'package:myapp/utils/toast/toast_manager.dart';
 
+import '../model/auth_result.dart';
 import 'widget/input_widget.dart';
 
 class RegisterView extends ConsumerStatefulWidget {
@@ -109,7 +110,7 @@ class _RegisterViewState extends ConsumerState<RegisterView>
                                     context, "Account create successful 🥰");
 
                               case Error():
-                                ToastManager().showToast(context, msg.msg);
+                                ToastManager().showToast(context, msg.msg!);
                             }
                           }
                         },
