@@ -343,18 +343,7 @@ class _App3State extends ConsumerState<App3> {
   @override
   Widget build(BuildContext context) {
     if (_connectionStatus.contains(ConnectivityResult.none)) {
-      return const Scaffold(
-        body: Center(
-          child: Column(
-            children: [
-              Text(
-                "No Internet Connection",
-                style: TextStyle(color: Colors.red),
-              ),
-            ],
-          ),
-        ),
-      );
+     return const NoInternetScreen();
     }
 
     if (hasInternetConnection() == false) {

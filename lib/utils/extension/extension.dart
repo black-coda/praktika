@@ -72,6 +72,10 @@ extension CustomRouteExtension on BuildContext {
       {Object? arguments}) {
     return Navigator.of(this).pushNamed(routeName, arguments: arguments);
   }
+  Future<T?> pushNamed<T extends Object?>(String routeName,
+      {Object? arguments}) {
+    return Navigator.of(this).pushNamed(routeName, arguments: arguments);
+  }
 }
 
 // extension for animation on navigator
@@ -95,6 +99,13 @@ extension CustomNavigatorExtension on NavigatorState {
           );
         },
       ),
+    );
+  }
+
+  Future<T?> pushNamedAnimated<T>(String routeName, {Object? arguments}) {
+    return pushNamed(
+      routeName,
+      arguments: arguments,
     );
   }
 }

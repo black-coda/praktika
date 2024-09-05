@@ -4,7 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:myapp/app/controllers/bottom_navbar_controller/btn_nav_controller.dart';
 import 'package:myapp/app/view/widgets/bottom_nav_bar.dart';
 import 'package:myapp/app/view/widgets/chip.dart';
+import 'package:myapp/features/notification/view/screens/notification_screen.dart';
 import 'package:myapp/features/user/controller/user_controller.dart';
+import 'package:myapp/features/user/view/profile_view.dart';
 import 'package:myapp/features/user/view_models/user_profiles_backend.dart';
 import 'package:myapp/utils/constant/constant.dart';
 import 'package:myapp/utils/extension/extension.dart';
@@ -64,11 +66,11 @@ class DashboardEntryScreen extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16),
       child: CustomScrollView(
         slivers: [
-          //? Appbar
+          //? AppBar
           SliverAppBar(
             leading: GestureDetector(
               onTap: () {
-                Navigator.of(context).pushNamed(RouterManager.userProfileRoute);
+                context.push(const UserProfileView());
               },
               child: const CircleAvatar(
                   maxRadius: 15,
@@ -101,11 +103,14 @@ class DashboardEntryScreen extends ConsumerWidget {
             actions: [
               IconButton(
                 onPressed: () {
-                  //  TODO: Implement notification screen
+                  context.push(const NotificationScreen());
                 },
-                icon: const Icon(
-                  Icons.notification_important_outlined,
-                  color: Color(0xff6C6C6C),
+                icon: Badge.count(
+                  count: 2,
+                  child: const Icon(
+                    Icons.notifications,
+                    color: Color(0xff6C6C6C),
+                  ),
                 ),
                 padding: EdgeInsets.zero,
               )

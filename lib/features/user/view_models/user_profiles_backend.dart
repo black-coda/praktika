@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:myapp/features/authentication/controller/supabase_provider.dart';
 import 'package:myapp/features/user/model/user_model.dart';
@@ -6,7 +8,9 @@ import 'package:myapp/utils/constant/constant.dart';
 class UserProfilesBackend {
   final Ref ref;
 
-  UserModel? _userModel;
+  late UserModel _userModel;
+
+  UserModel get userModel => _userModel;
 
   UserProfilesBackend(this.ref);
   Future<Map<String, dynamic>> getUserDetails() async {
@@ -21,7 +25,7 @@ class UserProfilesBackend {
     final jsonData = data.first;
     //! get cached user data
     _userModel = UserModel.fromJson(jsonData);
+    log(_userModel.fullName);
     return jsonData;
   }
 }
-
