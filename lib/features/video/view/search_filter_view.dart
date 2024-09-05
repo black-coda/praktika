@@ -96,6 +96,8 @@ class SearchFilterView extends ConsumerWidget {
                             : VideoType.course),
                     onTap: () {
                       log("$type tapped", name: type);
+                      log("${ref.watch(categorySearchFilterStateProvider)}",
+                          name: "categorySearchFilterStateProvider");
                       ref.read(filterVideoProvider.notifier).state =
                           type == "Lectures"
                               ? VideoType.lecture
@@ -117,7 +119,7 @@ class SearchFilterView extends ConsumerWidget {
                   "Graphic design",
                   "Marketing",
                   "Business",
-                  "Mobile Development",
+                  "Mobile development",
                 ].map(
                   (categoryName) => ChipWidget(
                     text: categoryName,
