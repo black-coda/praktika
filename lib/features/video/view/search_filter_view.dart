@@ -116,7 +116,8 @@ class SearchFilterView extends ConsumerWidget {
                   "Illustrations",
                   "Graphic design",
                   "Marketing",
-                  "Business"
+                  "Business",
+                  "Mobile Development",
                 ].map(
                   (categoryName) => ChipWidget(
                     text: categoryName,

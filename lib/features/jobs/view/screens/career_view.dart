@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myapp/app/view/widgets/header.dart';
+import 'package:myapp/features/jobs/view/screens/job_list_view.dart';
 import 'package:myapp/features/user/controller/user_controller.dart';
 import 'package:myapp/utils/constant/constant.dart';
 import 'package:myapp/utils/loader/simmer_text.dart';
+import 'package:myapp/utils/extension/extension.dart';
 
 class CareerView extends ConsumerWidget {
   const CareerView({super.key});
@@ -41,15 +43,21 @@ class CareerView extends ConsumerWidget {
             size: 24,
           ),
         ),
-        const SliverToBoxAdapter(
+        SliverToBoxAdapter(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                HeaderWidget("Jobs"),
-                SizedBox(width: 16),
-                Icon(Icons.arrow_forward_ios, color: Colors.white, size: 16),
+                const HeaderWidget("Jobs"),
+                const SizedBox(width: 16),
+                IconButton(
+                  icon: const Icon(Icons.arrow_forward_ios,
+                      color: Colors.white, size: 16),
+                  onPressed: () {
+                    context.push(const JobListView());
+                  },
+                ),
               ],
             ),
           ),

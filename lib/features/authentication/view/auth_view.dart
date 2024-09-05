@@ -64,9 +64,9 @@ class AuthView extends ConsumerWidget {
                 ///* If the current view is register, navigate to login view
                 isLogin
                     ? Navigator.of(context)
-                        .animateTo(const AuthView(isLogin: false))
+                        .pushAnimated(const AuthView(isLogin: false))
                     : Navigator.of(context)
-                        .animateTo(const AuthView(isLogin: true));
+                        .pushAnimated(const AuthView(isLogin: true));
               },
               child: RichText(
                 textAlign: TextAlign.center,

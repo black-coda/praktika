@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:myapp/app/view/widgets/header.dart';
 import 'package:myapp/app/view/widgets/video_card.dart';
 import 'package:myapp/utils/constant/constant.dart';
-import 'package:myapp/utils/widget/custom_tile_widget.dart';
+import 'package:myapp/utils/shared/custom_tile_widget.dart';
 import 'package:myapp/features/video/controller/search_and_filter_controllers.dart';
 
 import '../model/video_model.dart';

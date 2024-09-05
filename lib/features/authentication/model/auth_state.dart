@@ -140,6 +140,7 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
   Future<void> logout() async {
     try {
       setIsLoading(true);
+      state = AuthState.defaultState();
       await authenticator.logout();
     } on AuthException catch (e) {
       log(e.message);
@@ -154,13 +155,13 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
       final AuthChangeEvent event = data.event;
       final Session? session = data.session;
       if (event == AuthChangeEvent.signedIn) {
-        Navigator.of(context).animateTo(const DashboardView());
+        Navigator.of(context).pushAnimated(const DashboardView());
       }
       if (event == AuthChangeEvent.initialSession && session != null) {
-        Navigator.of(context).animateTo(const DashboardView());
+        Navigator.of(context).pushAnimated(const DashboardView());
       }
       if (event == AuthChangeEvent.signedOut) {
-        Navigator.of(context).animateTo(const OnboardEntryScreen());
+        Navigator.of(context).pushAnimated(const OnboardEntryScreen());
       }
     });
   }

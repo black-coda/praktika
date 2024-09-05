@@ -7,9 +7,11 @@ import 'package:myapp/app/view/widgets/chip.dart';
 import 'package:myapp/features/user/controller/user_controller.dart';
 import 'package:myapp/features/user/view_models/user_profiles_backend.dart';
 import 'package:myapp/utils/constant/constant.dart';
+import 'package:myapp/utils/extension/extension.dart';
 import 'package:myapp/utils/loader/simmer_text.dart';
 import 'package:myapp/utils/router/router_manager.dart';
 import 'package:myapp/features/video/controller/videos_controller.dart';
+import 'package:myapp/utils/shared/no_internet_screen.dart';
 
 import '../widgets/header.dart';
 import '../widgets/video_card.dart';
@@ -99,10 +101,16 @@ class DashboardEntryScreen extends ConsumerWidget {
                   );
                 },
               ),
-              actions: const [
-                Icon(
-                  Icons.notification_important_outlined,
-                  color: Color(0xff6C6C6C),
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    //  TODO: Implement notification screen
+                  },
+                  icon: const Icon(
+                    Icons.notification_important_outlined,
+                    color: Color(0xff6C6C6C),
+                  ),
+                  padding: EdgeInsets.zero,
                 )
               ],
             ),
@@ -147,12 +155,14 @@ class DashboardEntryScreen extends ConsumerWidget {
                     children: [
                       const HeaderWidget("Courses"),
                       VideoCard(
-                        videosList: ref.watch(courseVideoProvider(categoryFilterProvider)),
+                        videosList: ref
+                            .watch(courseVideoProvider(categoryFilterProvider)),
                       ),
                       SpacerConstant.sizedBox20,
                       const HeaderWidget("Lectures"),
                       VideoCard(
-                        videosList: ref.watch(lectureVideoProvider(categoryFilterProvider)),
+                        videosList: ref.watch(
+                            lectureVideoProvider(categoryFilterProvider)),
                       ),
                     ],
                   ),

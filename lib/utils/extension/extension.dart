@@ -59,12 +59,25 @@ extension CustomRouteExtension on BuildContext {
       },
     );
   }
+
+  void pop<T extends Object?>([T? result]) {
+    Navigator.of(this).pop(result);
+  }
+
+  void push(Widget page) {
+    Navigator.of(this).push(createCustomRoute(page));
+  }
+
+  Future<T?> pushReplacement<T extends Object?>(String routeName,
+      {Object? arguments}) {
+    return Navigator.of(this).pushNamed(routeName, arguments: arguments);
+  }
 }
 
 // extension for animation on navigator
 
 extension CustomNavigatorExtension on NavigatorState {
-  Future<T?> animateTo<T>(Widget page) {
+  Future<T?> pushAnimated<T>(Widget page) {
     return pushReplacement(
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) => page,
@@ -85,8 +98,6 @@ extension CustomNavigatorExtension on NavigatorState {
     );
   }
 }
-
-
 
 //? extension to  Check for internet availability
 extension DioErrorX on DioException {

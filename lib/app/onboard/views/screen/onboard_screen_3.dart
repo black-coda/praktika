@@ -36,7 +36,7 @@ class OnboardScreen3 extends StatelessWidget {
                 onPressed: () => {
                   log("to auth view", name: "OnboardScreen3"),
                   Navigator.of(context)
-                      .animateTo(const AuthView(isLogin: true)),
+                      .pushAnimated(const AuthView(isLogin: true)),
                 },
                 child: Text(
                   "Next",
@@ -55,5 +55,3 @@ class OnboardScreen3 extends StatelessWidget {
     );
   }
 }
-
-

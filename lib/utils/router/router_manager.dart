@@ -44,6 +44,8 @@ class RouterManager {
   static const String courseDetailRoute = '/courseDetail';
   static const String searchFilterView = 'searchFilter';
   static const String searchFilterRoute = '/searchFilter';
+  static const String jobListView = 'jobList';
+  static const String jobListRoute = '/jobList';
 }
 
 class MaterialRouteManager {

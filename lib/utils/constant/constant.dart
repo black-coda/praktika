@@ -11,6 +11,8 @@ class Constant {
   static const scaffoldPadding =
       EdgeInsets.symmetric(vertical: 32, horizontal: 16);
 
+  static const lottieAnimationUrl = "https://lottie.host/6e48f2d3-6607-444f-b77a-e557534e23c4/M9krBsid7H.json";
+
   static const defaultProfileImage =
       "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671116.jpg?w=826&t=st=1717727695~exp=1717728295~hmac=ec1f2b2f76d8254081ea5a1a2bda88801ec3a11cef9f6282030b5ed61c983c19";
 

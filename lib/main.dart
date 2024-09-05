@@ -11,6 +11,7 @@ import 'package:myapp/features/authentication/controller/auth_controller.dart';
 import 'package:myapp/key.dart';
 import 'package:myapp/app/onboard/views/screen/onboard_entry_screen.dart';
 import 'package:myapp/utils/router/router_manager.dart';
+import 'package:myapp/utils/shared/no_internet_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'app/view/screens/dashboard_screen.dart';
@@ -52,8 +53,6 @@ class AppEntry extends ConsumerWidget {
       ),
       home: Consumer(
         builder: (context, ref, child) {
-          
-          
           //* display loading screen when isLoading is true
           ref.listen<bool>(
             authLoadingStateProvider,
@@ -359,19 +358,7 @@ class _App3State extends ConsumerState<App3> {
     }
 
     if (hasInternetConnection() == false) {
-      return const Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "No Internet Connection",
-                style: TextStyle(color: Colors.red),
-              ),
-            ],
-          ),
-        ),
-      );
+      return const NoInternetScreen();
     }
 
     if (_isFirstTime == null) {

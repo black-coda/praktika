@@ -5,7 +5,7 @@ import 'package:myapp/features/user/view_models/user_profiles_backend.dart';
 import 'package:myapp/utils/constant/constant.dart';
 import 'package:myapp/utils/error/view/error_view.dart';
 import 'package:myapp/utils/loader/simmer_text.dart';
-import 'package:myapp/utils/widget/custom_tile_widget.dart';
+import 'package:myapp/utils/shared/custom_tile_widget.dart';
 
 import '../controller/user_controller.dart';
 

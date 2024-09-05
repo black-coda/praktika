@@ -96,7 +96,7 @@ class _LoginViewState extends ConsumerState<LoginView>
                                 .loginWithEmailAndPassword(model)
                                 .then((_) {
                               if (authResult != null) {
-                                log(authResult.toString());
+                                log(authResult.toString(), name: "Login View");
                                 switch (authResult) {
                                   case Success():
                                     ToastManager()
@@ -125,7 +125,7 @@ class _LoginViewState extends ConsumerState<LoginView>
                   GestureDetector(
                     onTap: () {
                       Navigator.of(context)
-                          .animateTo(const AuthView(isLogin: false));
+                          .pushAnimated(const AuthView(isLogin: false));
                     },
                     child: RichText(
                       textAlign: TextAlign.center,

@@ -68,6 +68,8 @@ final filteredTodoListProvider = Provider<List<Video>>((ref) {
     'Mobile development': 'Mobile development',
   };
 
+  
+
   switch (filter) {
     case VideoType.lecture:
       final matchingVideos = videos
