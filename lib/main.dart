@@ -307,8 +307,8 @@ class _App3State extends ConsumerState<App3> {
     setState(() {
       _connectionStatus = result;
     });
-    // ignore: avoid_print
-    print('Connectivity changed: $_connectionStatus');
+   
+    log('Connectivity changed: $_connectionStatus');
   }
 
   //? check for first time installation
@@ -343,7 +343,7 @@ class _App3State extends ConsumerState<App3> {
   @override
   Widget build(BuildContext context) {
     if (_connectionStatus.contains(ConnectivityResult.none)) {
-     return const NoInternetScreen();
+      return const NoInternetScreen();
     }
 
     if (hasInternetConnection() == false) {
@@ -365,6 +365,10 @@ class _App3State extends ConsumerState<App3> {
 
     final isLoggedInState = ref.watch(isLoggedInProvider);
     log(isLoggedInState.toString(), name: "Check for login state");
-    return isLoggedInState ? const DashboardView() : const LogoutView();
+    if (isLoggedInState) {
+      return const DashboardView();
+    } else {
+      return const LogoutView();
+    }
   }
 }

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:myapp/app/view/screens/dashboard_screen.dart';
 import 'package:myapp/features/authentication/controller/auth_controller.dart';
 import 'package:myapp/features/authentication/model/auth_dto.dart';
 import 'package:myapp/utils/constant/constant.dart';
@@ -93,7 +94,7 @@ class _LoginViewState extends ConsumerState<LoginView>
                                 password: passwordController.text.trim());
                             await ref
                                 .read(authStateNotifierProvider.notifier)
-                                .loginWithEmailAndPassword(model)
+                                .loginWithEmailAndPassword(model, context)
                                 .then((_) {
                               if (authResult != null) {
                                 log(authResult.toString(), name: "Login View");
@@ -101,6 +102,7 @@ class _LoginViewState extends ConsumerState<LoginView>
                                   case Success():
                                     ToastManager()
                                         .showToast(context, authResult.msg!);
+
                                   case Error():
                                     ToastManager()
                                         .showToast(context, authResult.msg!);

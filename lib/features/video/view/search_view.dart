@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:myapp/app/view/widgets/header.dart';
 import 'package:myapp/app/view/widgets/video_card.dart';
 import 'package:myapp/utils/constant/constant.dart';
+import 'package:myapp/utils/shared/animated_scroll_item_widget.dart';
 import 'package:myapp/utils/shared/custom_tile_widget.dart';
 import 'package:myapp/features/video/controller/search_and_filter_controllers.dart';
 
@@ -157,29 +158,30 @@ class _SearchViewState extends ConsumerState<SearchView> {
       );
     }
 
-    return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (context, index) {
-          final video = searchResult[index];
-          return GestureDetector(
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) {
-                  return CourseDetailView(
-                    video: video,
-                    index: index,
-                  );
-                },
-              ),
+    return SliverList.separated(
+      separatorBuilder: (context, index) => const SizedBox(height: 16),
+      itemCount: searchResult.length,
+      itemBuilder: (context, index) {
+        final video = searchResult[index];
+        return GestureDetector(
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return CourseDetailView(
+                  video: video,
+                  index: index,
+                );
+              },
             ),
+          ),
+          child: AnimatedScrollViewItem(
             child: VideoDetailCard(
               video: video,
               index: index,
             ),
-          );
-        },
-        childCount: searchResult.length,
-      ),
+          ),
+        );
+      },
     );
   }
 

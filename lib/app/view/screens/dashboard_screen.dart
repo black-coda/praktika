@@ -28,27 +28,11 @@ class DashboardView extends ConsumerStatefulWidget {
 class _DashboardViewState extends ConsumerState<DashboardView> {
   @override
   Widget build(BuildContext context) {
-    final index = ref.watch(indexProvider);
+    final navbarCurrentIndex = ref.watch(indexProvider);
     return Scaffold(
       extendBody: true,
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
-        child: Container(
-          height: 64,
-          decoration: const BoxDecoration(
-            color: Colors.transparent,
-            borderRadius: BorderRadius.all(Radius.circular(30)),
-          ),
-          child: Material(
-            elevation: 0.0,
-            color: const Color(0xff2F2F2F),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30.0)),
-            child: const BottomNavBar(),
-          ),
-        ),
-      ),
-      body: ref.watch(navBarScreenProvider(index)),
+      bottomNavigationBar: const BottomNavBar(),
+      body: ref.watch(navBarScreenProvider(navbarCurrentIndex)),
     );
   }
 }
@@ -81,15 +65,19 @@ class DashboardEntryScreen extends ConsumerWidget {
                 final userDetails = ref.watch(userProfileBackendFutureProvider);
                 return userDetails.when(
                   data: (data) {
-                    return Text("Hello, ${data['username']}",
-                        style: Constant.appBarTitleStyle(context));
+                    return Text(
+                      "Hello, ${data['username']}",
+                      style: Constant.appBarTitleStyle(context),
+                    );
                   },
                   loading: () {
-                    return const ShimmerText("Loading...",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w400));
+                    return const ShimmerText(
+                      "Loading...",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400),
+                    );
                   },
                   error: (_, __) {
                     return const Text(

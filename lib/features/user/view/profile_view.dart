@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:myapp/features/authentication/controller/auth_controller.dart';
 import 'package:myapp/features/user/view_models/user_profiles_backend.dart';
@@ -147,9 +148,13 @@ class _UserProfileViewState extends ConsumerState<UserProfileView> {
                         label: Text("Logout",
                             style: Constant.underlineStyle(context)),
                         icon:
-                            const Icon(Icons.logout, color: Color(0xff6C6C6C)),
+                            const Icon(Icons.logout, color: Color(0xff6E6D6C)),
                       ),
-                    ],
+                    ]
+                        .animate()
+                        .fadeIn(duration: 600.ms)
+                        // baseline=800ms
+                        .slideX(curve: Curves.easeIn),
                   ),
                 ),
               ),

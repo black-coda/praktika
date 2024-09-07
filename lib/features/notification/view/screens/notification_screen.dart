@@ -14,29 +14,15 @@ class NotificationScreen extends ConsumerWidget {
     final data = ref.watch(userDetailsProvider).userModel;
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         leading: const CircleAvatar(
             maxRadius: 15,
             foregroundImage: NetworkImage(Constant.defaultProfileImage)),
-        title: Text("Hello, ${data.fullName}",
+        title: Text("Hello, ${data!.fullName}",
             style: Constant.appBarTitleStyle(context)),
-        actions: [
-          IconButton(
-            onPressed: () {
-              context.push(const NotificationScreen());
-            },
-            icon: Badge.count(
-              count: 2,
-              child: const Icon(
-                Icons.notifications,
-                color: Color(0xff6C6C6C),
-              ),
-            ),
-            padding: EdgeInsets.zero,
-          )
-        ],
       ),
       body: const Padding(
-        padding: EdgeInsets.zero,
+        padding: Constant.scaffoldPadding,
         child: SingleChildScrollView(
           child: Column(
             children: [

@@ -3,6 +3,7 @@ import 'package:myapp/utils/constant/constant.dart';
 import 'package:myapp/utils/extension/extension.dart';
 import 'package:myapp/features/video/model/video_model.dart';
 import 'package:myapp/features/video/view/courses_view.dart';
+import 'package:myapp/utils/shared/animated_scroll_item_widget.dart';
 import 'rating_button.dart';
 
 class VideoCard extends StatelessWidget {
@@ -18,6 +19,7 @@ class VideoCard extends StatelessWidget {
     return SizedBox(
       height: 184,
       child: ListView.builder(
+        cacheExtent: 0,
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
@@ -32,102 +34,106 @@ class VideoCard extends StatelessWidget {
                 ),
               );
             },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: (index % 3 == 0)
-                      ? const Color(0xffEC704B)
-                      : (index % 3 == 1)
-                          ? const Color(0xffF5F378)
-                          : const Color(0xffDCC1FF),
-                ),
-                padding: const EdgeInsets.all(10),
-                width: 280,
-                child: Stack(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        //? Title
-                        SizedBox(
-                          width: 205,
-                          child: Text(
-                            videosList[index].title,
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayLarge
-                                ?.copyWith(
-                                  color: const Color(0xff242424),
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 20,
-                                ),
-                            overflow: TextOverflow.fade,
-                            maxLines: 3,
-                          ),
-                        ),
-                        const Icon(Icons.favorite_border_outlined, size: 20)
-                      ],
-                    ),
-                    //? price widget
-                    Positioned(
-                      bottom: 35,
-                      left: 0,
-                      child: Text(
-                        "${videosList[index].price.toString()} \$",
-                        style:
-                            Theme.of(context).textTheme.displayLarge?.copyWith(
-                                  color: const Color(0xff242424),
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 20,
-                                ),
-                      ),
-                    ),
-
-                    Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Row(
+            child: AnimatedScrollViewItem(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: (index % 3 == 0)
+                        ? const Color(0xffEC704B)
+                        : (index % 3 == 1)
+                            ? const Color(0xffF5F378)
+                            : const Color(0xffDCC1FF),
+                  ),
+                  padding: const EdgeInsets.all(10),
+                  width: 280,
+                  child: Stack(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          //? Ratings
+                          //? Title
                           SizedBox(
-                            height: 24,
-                            width: 60,
-                            child: ChipElevatedBtn(
-                              index: index,
-                              ratings: "4.5",
+                            width: 205,
+                            child: Text(
+                              videosList[index].title,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displayLarge
+                                  ?.copyWith(
+                                    color: const Color(0xff242424),
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 20,
+                                  ),
+                              overflow: TextOverflow.fade,
+                              maxLines: 3,
                             ),
                           ),
-                          const SizedBox(width: 4),
-                          //? Duration
-                          SizedBox(
-                            height: 24,
-                            width: 60,
-                            child: ChipElevatedBtn(
-                              index: index,
-                              ratings: videosList[index]
-                                  .duration
-                                  .toFormattedString(),
-                              isDurationField: true,
-                            ),
-                          ),
+                          const Icon(Icons.favorite_border_outlined, size: 20)
                         ],
                       ),
-                    ),
-// ? image
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      widthFactor: 0,
-                      child: SizedBox(
-                        height: 140,
-                        child: Image.asset(
-                          "assets/img_2.png",
-                          width: 150,
+                      //? price widget
+                      Positioned(
+                        bottom: 35,
+                        left: 0,
+                        child: Text(
+                          "${videosList[index].price.toString()} \$",
+                          style: Theme.of(context)
+                              .textTheme
+                              .displayLarge
+                              ?.copyWith(
+                                color: const Color(0xff242424),
+                                fontWeight: FontWeight.w600,
+                                fontSize: 20,
+                              ),
                         ),
                       ),
-                    )
-                  ],
+
+                      Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Row(
+                          children: [
+                            //? Ratings
+                            SizedBox(
+                              height: 24,
+                              width: 60,
+                              child: ChipElevatedBtn(
+                                index: index,
+                                ratings: "4.5",
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            //? Duration
+                            SizedBox(
+                              height: 24,
+                              width: 60,
+                              child: ChipElevatedBtn(
+                                index: index,
+                                ratings: videosList[index]
+                                    .duration
+                                    .toFormattedString(),
+                                isDurationField: true,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // ? image
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        widthFactor: 0,
+                        child: SizedBox(
+                          height: 140,
+                          child: Image.asset(
+                            "assets/img_2.png",
+                            width: 150,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
