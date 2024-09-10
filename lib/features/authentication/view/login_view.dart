@@ -12,7 +12,7 @@ import 'package:myapp/utils/toast/toast_manager.dart';
 
 import '../model/auth_result.dart';
 import 'auth_view.dart';
-import 'widget/input_widget.dart';
+import 'widget/input_field_widget.dart';
 
 class LoginView extends ConsumerStatefulWidget {
   const LoginView({super.key});
@@ -79,7 +79,7 @@ class _LoginViewState extends ConsumerState<LoginView>
                   InputField(formName: "Email", controller: emailController),
                   const SizedBox(height: 20),
                   InputField(
-                      formName: "Password", controller: passwordController),
+                      formName: "Password", controller: passwordController, isPasswordField: true),
                   SizedBox(
                     height: MediaQuery.sizeOf(context).height * 0.1,
                   ),

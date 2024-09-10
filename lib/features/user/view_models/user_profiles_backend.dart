@@ -31,18 +31,18 @@ import 'package:myapp/utils/constant/constant.dart';
 //   }
 // }
 
-class UserProfilesBackend {
+class UserProfilesService {
   // The single instance of the class
-  static final UserProfilesBackend _instance = UserProfilesBackend._internal();
+  static final UserProfilesService _instance = UserProfilesService._internal();
 
   // A factory constructor that returns the singleton instance
-  factory UserProfilesBackend(Ref ref) {
+  factory UserProfilesService(Ref ref) {
     _instance.ref = ref;
     return _instance;
   }
 
   // The actual constructor, marked as private
-  UserProfilesBackend._internal();
+  UserProfilesService._internal();
 
   late Ref ref; // Ref is late because it will be initialized by the factory
 

@@ -5,22 +5,35 @@ class InputField extends StatelessWidget {
     super.key,
     required this.formName,
     required this.controller,
+    this.isPasswordField = false,
+    this.validator,
+    this.keyboardType,
   });
+
   final String formName;
-  TextEditingController controller;
+  final bool isPasswordField;
+  final TextEditingController controller;
+  final String? Function(String?)? validator;
+  final TextInputType? keyboardType;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(formName,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.white,
-                )),
+        Text(
+          formName,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Colors.white,
+              ),
+        ),
         const SizedBox(height: 8),
         TextFormField(
+          validator: validator ?? _isNotEmptyValidator,
           controller: controller,
+          keyboardType: isPasswordField ? TextInputType.text : keyboardType,
+          obscureText: isPasswordField,
+          autocorrect: !isPasswordField,
           decoration: InputDecoration(
             fillColor: Colors.white,
             filled: true,
@@ -40,9 +53,19 @@ class InputField extends StatelessWidget {
                 Radius.circular(24),
               ),
             ),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+            errorStyle: const TextStyle(color: Colors.redAccent),
           ),
         ),
       ],
     );
+  }
+
+  String? _isNotEmptyValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter some text';
+    }
+    return null;
   }
 }

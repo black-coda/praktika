@@ -10,7 +10,7 @@ import 'package:myapp/utils/router/router_manager.dart';
 import 'package:myapp/utils/toast/toast_manager.dart';
 
 import '../model/auth_result.dart';
-import 'widget/input_widget.dart';
+import 'widget/input_field_widget.dart';
 
 class RegisterView extends ConsumerStatefulWidget {
   const RegisterView({super.key});
@@ -85,7 +85,9 @@ class _RegisterViewState extends ConsumerState<RegisterView>
                       formName: "Username", controller: usernameController),
                   const SizedBox(height: 16),
                   InputField(
-                      formName: "Password", controller: passwordController),
+                      formName: "Password",
+                      controller: passwordController,
+                      isPasswordField: true),
                   SizedBox(
                     height: MediaQuery.sizeOf(context).height * 0.08,
                   ),

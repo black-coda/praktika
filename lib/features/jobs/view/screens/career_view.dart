@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:myapp/app/view/widgets/header.dart';
 import 'package:myapp/features/jobs/view/screens/job_list_view.dart';
-import 'package:myapp/features/user/controller/user_controller.dart';
+import 'package:myapp/features/jobs/view/widget/resume_card_widget.dart';
 import 'package:myapp/utils/constant/constant.dart';
-import 'package:myapp/utils/loader/simmer_text.dart';
 import 'package:myapp/utils/extension/extension.dart';
+
+import 'resume_view.dart';
 
 class CareerView extends ConsumerWidget {
   const CareerView({super.key});
@@ -84,103 +84,7 @@ class CareerView extends ConsumerWidget {
         ),
 
         //* My Resume Card
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          sliver: SliverFillRemaining(
-            hasScrollBody: false,
-            child: Container(
-              decoration: const BoxDecoration(
-                  color: Constant.backgroundColorYellow,
-                  borderRadius: BorderRadius.all(Radius.circular(16))),
-              // height: double.maxFinite,
-              // width: double.maxFinite,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Consumer(
-                  builder: (context, ref, child) {
-                    final userDetails =
-                        ref.watch(userProfileBackendFutureProvider);
-                    return userDetails.when(
-                      data: (data) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                HeaderWidget(
-                                  data['full_name'],
-                                  color: Constant.backgroundColorDark,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineMedium
-                                      ?.copyWith(
-                                        fontWeight: FontWeight.w900,
-                                        fontSize: 20,
-                                      ),
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.edit_outlined),
-                                  onPressed: () {},
-                                  padding: EdgeInsets.zero,
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  "Junior marketing manager",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelLarge!
-                                      .copyWith(
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                ),
-                              ],
-                            ),
-
-                            //* Experience
-                            SpacerConstant.sizedBox24,
-                            Text(
-                              "1 year of Experience".toUpperCase(),
-                              style: Theme.of(context).textTheme.labelLarge,
-                            ),
-
-                            // * Body
-                            SpacerConstant.sizedBox24,
-                            Text(
-                              "As a Junior Marketing Manager, I actively engaged in the end-to-end process of developing and implementing marketing strategies that were meticulously designed to achieve measurable results. My contributions spanned multiple aspects of marketing, from ideation and planning to execution and performance evaluation. Strategic Planning and Execution: In my role, I was deeply involved in the strategic planning process. I collaborated closely with senior management to define marketing objectives that aligned with the company’s broader business goals.",
-                              style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                      loading: () {
-                        return const ShimmerText(
-                          "Loading...",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w400),
-                        );
-                      },
-                      error: (_, __) {
-                        return const Text(
-                          "Error fetching user data",
-                          style: TextStyle(color: Colors.white),
-                        );
-                      },
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-        )
+        const ResumeCardWidget(navigateTo: ResumeView())
       ],
     );
   }
