@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
 import 'dart:io';
 
@@ -5,13 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:myapp/app/view/screens/dashboard_screen.dart';
 import 'package:myapp/features/authentication/controller/is_logged_in_provider.dart';
-
 import 'package:myapp/features/authentication/controller/supabase_provider.dart';
 import 'package:myapp/features/authentication/model/auth_dto.dart';
 import 'package:myapp/app/onboard/views/screen/onboard_entry_screen.dart';
+import 'package:myapp/features/authentication/view/login_view.dart';
 import 'package:myapp/features/authentication/view_models/authenticator.dart';
 import 'package:myapp/utils/extension/extension.dart';
 import 'package:myapp/utils/router/router_manager.dart';
+import 'package:myapp/utils/toast/toast_manager.dart';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -55,7 +58,7 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
 
   Future<void> loginWithEmailAndPassword(
       AuthDTO model, BuildContext context) async {
-    final navigate = Navigator.of(context);
+    // final navigate = Navigator.of(context);
     try {
       setIsLoading(true);
       final responseSession =
@@ -63,34 +66,68 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
       state = AuthState(
           session: responseSession,
           isLoading: false,
-          result: Success(msg: "login successful 🥰"));
+          result: AuthResult.signedIn);
       log(state.session != null ? "Logged in" : "Not logged in");
     } on SocketException catch (e) {
       log(e.toString());
       state = AuthState(
-          session: null, isLoading: false, result: Error(msg: e.message));
+        session: null,
+        isLoading: false,
+        result: AuthResult.error,
+      );
     } on AuthException catch (e) {
       log(e.message);
-      state = AuthState(
-          session: null, isLoading: false, result: Error(msg: e.message));
+      state =
+          AuthState(session: null, isLoading: false, result: AuthResult.error);
     } finally {
       setIsLoading(false);
-      if (state.session != null) {
-        // ref.invalidate(isLoggedInProvider);
-      }
     }
   }
 
-  Future<AuthResult> registerWithEmailAndPassword(AuthDTO model) async {
+  Future<void> registerWithEmailAndPassword(
+      AuthDTO model, BuildContext context) async {
+    final navigate = Navigator.of(context);
     try {
       setIsLoading(true);
+
+      // Call the registration method
       await authenticator.registerWithEmailAndPassword(model);
 
-      return Success(msg: "account created successful 🥰");
+      // Show success toast
+      ToastManager().showToast(context, "Account created successfully 🥰");
+
+      // Reset the state to default after successful registration
+      state = AuthState.defaultState();
+
+      // Navigate to the LoginView and clear the navigation stack
+      navigate.pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const LoginView()),
+        (Route<dynamic> route) =>
+            route.settings.name ==
+            RouterManager.logoutRoute, // This clears the previous routes
+      );
+      log("Account created successfully");
+    } on SocketException catch (e) {
+      log(e.toString());
+      ToastManager().showToast(context,
+          "It seems like you are not connected to the internet.\nPlease check your connection and try again.");
+
+      state = AuthState(
+        session: null,
+        isLoading: false,
+        result: AuthResult.error,
+      );
     } on AuthException catch (e) {
       log(e.message, name: "Registration AuthException");
-      return Error(msg: e.message);
+      ToastManager().showToast(context, e.message);
+
+      state = AuthState(
+        session: null,
+        isLoading: false,
+        result: AuthResult.error,
+      );
     } finally {
+      // Ensure loading is stopped even after an error occurs
       setIsLoading(false);
     }
   }

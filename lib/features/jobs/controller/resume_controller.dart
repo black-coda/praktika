@@ -83,7 +83,3 @@ final resumeServiceProvider = Provider<ResumeService>((ref) {
 });
 
 
-final resumeInstance = Provider<ResumeModel>((ref) {
-  
-  return ref.watch(resumeServiceProvider).resumeModel!;
-});

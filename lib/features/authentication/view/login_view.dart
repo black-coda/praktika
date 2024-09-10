@@ -54,7 +54,6 @@ class _LoginViewState extends ConsumerState<LoginView>
 
   @override
   Widget build(BuildContext context) {
-    final authResult = ref.watch(authStateNotifierProvider).result;
     return Scaffold(
       body: SafeArea(
         child: Form(
@@ -79,7 +78,9 @@ class _LoginViewState extends ConsumerState<LoginView>
                   InputField(formName: "Email", controller: emailController),
                   const SizedBox(height: 20),
                   InputField(
-                      formName: "Password", controller: passwordController, isPasswordField: true),
+                      formName: "Password",
+                      controller: passwordController,
+                      isPasswordField: true),
                   SizedBox(
                     height: MediaQuery.sizeOf(context).height * 0.1,
                   ),
@@ -94,21 +95,7 @@ class _LoginViewState extends ConsumerState<LoginView>
                                 password: passwordController.text.trim());
                             await ref
                                 .read(authStateNotifierProvider.notifier)
-                                .loginWithEmailAndPassword(model, context)
-                                .then((_) {
-                              if (authResult != null) {
-                                log(authResult.toString(), name: "Login View");
-                                switch (authResult) {
-                                  case Success():
-                                    ToastManager()
-                                        .showToast(context, authResult.msg!);
-
-                                  case Error():
-                                    ToastManager()
-                                        .showToast(context, authResult.msg!);
-                                }
-                              }
-                            });
+                                .loginWithEmailAndPassword(model, context);
                           }
                         },
                         style: ElevatedButton.styleFrom(

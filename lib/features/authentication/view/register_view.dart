@@ -103,17 +103,9 @@ class _RegisterViewState extends ConsumerState<RegisterView>
                               username: usernameController.text.trim(),
                               fullName: fullNameController.text.trim(),
                             );
-                            final msg = await ref
+                            await ref
                                 .read(authStateNotifierProvider.notifier)
-                                .registerWithEmailAndPassword(model);
-                            switch (msg) {
-                              case Success():
-                                ToastManager().showToast(
-                                    context, "Account create successful 🥰");
-
-                              case Error():
-                                ToastManager().showToast(context, msg.msg!);
-                            }
+                                .registerWithEmailAndPassword(model, context);
                           }
                         },
                         style: ElevatedButton.styleFrom(

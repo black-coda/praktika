@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:myapp/features/authentication/model/auth_result.dart';
 import 'package:myapp/key.dart';
 import 'package:myapp/app/onboard/views/screen/onboard_entry_screen.dart';
 import 'package:myapp/utils/router/router_manager.dart';
@@ -68,6 +69,22 @@ class AppEntry extends ConsumerWidget {
               }
             },
           );
+
+          ref.listen<AuthResult?>(isSignedInProvider, (_, next) {
+            log(next.toString(), name: "isSignedInProvider");
+
+            log("🤗🤗🤗🤗 ${next == AuthResult.signedIn}",
+                name: "isSignedInProvider");
+            if (next == null) {
+              print("Error here 🚀🚀🚀🚀🚀");
+              Navigator.pushNamed(context, RouterManager.logoutRoute);
+            }
+
+            if (next == AuthResult.signedIn) {
+              print("🚀🚀🚀🚀🚀");
+              Navigator.pushNamed(context, RouterManager.homeRoute);
+            }
+          });
 
           return const App3();
         },
@@ -306,7 +323,7 @@ class _App3State extends ConsumerState<App3> {
     setState(() {
       _connectionStatus = result;
     });
-   
+
     log('Connectivity changed: $_connectionStatus');
   }
 

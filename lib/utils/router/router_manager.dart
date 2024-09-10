@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:myapp/app/view/screens/dashboard_screen.dart';
 import 'package:myapp/features/authentication/view/login_view.dart';
+import 'package:myapp/features/authentication/view/logout_view.dart';
 import 'package:myapp/features/authentication/view/register_view.dart';
 import 'package:myapp/features/user/view/profile_view.dart';
 import 'package:myapp/features/video/view/courses_view.dart';
@@ -46,6 +47,8 @@ class RouterManager {
   static const String searchFilterRoute = '/searchFilter';
   static const String jobListView = 'jobList';
   static const String jobListRoute = '/jobList';
+  static const String logoutView = 'logout';
+  static const String logoutRoute = '/logout';
 }
 
 class MaterialRouteManager {
@@ -78,6 +81,10 @@ class MaterialRouteManager {
       case RouterManager.searchFilterRoute:
         return MaterialPageRoute(
           builder: (context) => const SearchFilterView(),
+        );
+      case RouterManager.logoutView:
+        return MaterialPageRoute(
+          builder: (context) => const LogoutView(),
         );
 
       default:

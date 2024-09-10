@@ -11,7 +11,7 @@ class NoInternetScreen extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
-            LottieBuilder.network(Constant.lottieAnimationUrl),
+            LottieBuilder.asset(Constant.lottieAnimationUrl),
             const Text(
               'No Internet Connection, Make sure Wi-Fi or mobile data is turned on',
               style: TextStyle(
