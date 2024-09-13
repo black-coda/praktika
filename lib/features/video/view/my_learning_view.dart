@@ -1,6 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lottie/lottie.dart';
 import 'package:myapp/app/view/widgets/header.dart';
 import 'package:myapp/app/view/widgets/video_card.dart';
 import 'package:myapp/utils/constant/constant.dart';
@@ -11,6 +11,18 @@ class MyLearningView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    //* check if favorite videos is empty
+    final favoriteVideos = ref.watch(favoriteVideosProvider);
+    if (favoriteVideos.isEmpty) {
+      return Scaffold(
+        body: Column(
+          children: [
+            
+            Lottie.asset("assets/lottie/empty.json"),
+          ],
+        ),
+      );
+    }
     return CustomScrollView(
       slivers: <Widget>[
         SliverAppBar(
@@ -42,7 +54,7 @@ class MyLearningView extends ConsumerWidget {
                 ),
                 const SizedBox(height: 12),
 
-                //? Implement trending/top/featured videos here
+                //TODO: Implement trending/top/featured videos here
               ],
             ),
           ),

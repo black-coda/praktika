@@ -10,20 +10,22 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class ResumeService {
   final Ref ref;
 
-  ResumeModel ? resumeModel;
+  ResumeModel? resumeModel;
 
   ResumeService({required this.ref});
 
   Future<ResumeModel?> fetchResume() async {
-    final isLoadingState = ref.watch(authStateNotifierProvider.notifier);
+    // final isLoadingState = ref.watch(authStateNotifierProvider.notifier);
     try {
-      isLoadingState.setIsLoading(true);
+      // isLoadingState.setIsLoading(true);
       final supabase = ref.watch(supabaseProvider);
       final currentUserUID = supabase.auth.currentUser!.id;
       final data =
           await supabase.from("resume").select().eq("id", currentUserUID);
 
-
+      if (data.isEmpty) {
+        return null;
+      }
       final resume = ResumeModel.fromMap(data.first);
       resumeModel = resume;
 
@@ -31,7 +33,7 @@ class ResumeService {
     } on Exception catch (e) {
       log(e.toString());
     }
-    isLoadingState.setIsLoading(true);
+    // isLoadingState.setIsLoading(true);
     return null;
   }
 
@@ -82,4 +84,7 @@ final resumeServiceProvider = Provider<ResumeService>((ref) {
   return ResumeService(ref: ref);
 });
 
-
+final getResumeFutureProvider =
+    FutureProvider.autoDispose<ResumeModel?>((ref) async {
+  return ref.read(resumeServiceProvider).fetchResume();
+});

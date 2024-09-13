@@ -8,6 +8,7 @@ import 'package:myapp/features/authentication/view/widget/input_field_widget.dar
 import 'package:myapp/features/jobs/controller/resume_controller.dart';
 import 'package:myapp/features/jobs/model/resume_model.dart';
 import 'package:myapp/utils/constant/constant.dart';
+import 'package:myapp/utils/shared/error_view.dart';
 import 'package:myapp/utils/toast/toast_manager.dart';
 
 class EditResumeView extends ConsumerStatefulWidget {
@@ -29,6 +30,7 @@ class _EditResumeViewState extends ConsumerState<EditResumeView> {
   @override
   void initState() {
     super.initState();
+
     _roleController = TextEditingController();
     _descriptionController = TextEditingController();
     _yearsOfExperienceController = TextEditingController();
@@ -50,77 +52,98 @@ class _EditResumeViewState extends ConsumerState<EditResumeView> {
   Widget build(BuildContext context) {
     final supabase = ref.watch(supabaseProvider);
     final currentUserUID = supabase.auth.currentUser!.id;
-    return Scaffold(
-      appBar: AppBar(
-        title: const HeaderWidget("Edit Resume"),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: Constant.scaffoldPadding,
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                InputField(formName: "Role", controller: _roleController),
-                SpacerConstant.sizedBox16,
-                InputField(
-                    formName: "Description",
-                    controller: _descriptionController),
-                SpacerConstant.sizedBox16,
-                InputField(
-                    formName: "Years of Experience",
-                    controller: _yearsOfExperienceController,
-                    keyboardType: TextInputType.number),
-                SpacerConstant.sizedBox16,
-                InputField(formName: "Skills", controller: _skillsController),
-                SpacerConstant.sizedBox16,
-                InputField(
-                    formName: "Achievements",
-                    controller: _achievementsController),
-                SpacerConstant.sizedBox32,
-                TextButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      log("Form validated");
-                      final resume = ResumeModel(
-                        id: currentUserUID,
-                        role: _roleController.text,
-                        description: _descriptionController.text,
-                        yearsOfExperience:
-                            int.parse(_yearsOfExperienceController.text),
-                        skills: _skillsController.text,
-                        achievements: _achievementsController.text,
-                      );
-                      final updateSuccess = await ref
-                          .read(resumeServiceProvider)
-                          .updateResume(resume)
-                          .then((value) {
-                        if (value) {
-                          ToastManager().showToast(
-                              context, "Resume updated successfully 🎉");
-                        }
-                      });
-                      log("Update success: $updateSuccess");
+    final resumeDetails = ref.watch(getResumeFutureProvider);
 
-                      if (updateSuccess) {
-                        ToastManager().showToast(
-                            context, "Resume updated successfully 🎉");
-                      }
-                      // Navigator.pop(context);
-                    }
-                  },
-                  child: Text(
-                    "Save",
-                    style: Constant.underlineStyle(context),
-                  ),
-                )
-              ],
+    return resumeDetails.when(
+      data: (data) {
+        // Populate the TextEditingControllers once data is available
+
+        _roleController.text = data?.role ?? '';
+        _descriptionController.text = data?.description ?? '';
+        _yearsOfExperienceController.text =
+            data?.yearsOfExperience.toString() ?? '';
+        _skillsController.text = data?.skills ?? '';
+        _achievementsController.text = data?.achievements ?? '';
+        return Scaffold(
+          appBar: AppBar(
+            title: const HeaderWidget("Edit Resume"),
+            centerTitle: true,
+          ),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: Constant.scaffoldPadding,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    InputField(formName: "Role", controller: _roleController),
+                    SpacerConstant.sizedBox16,
+                    InputField(
+                        formName: "Description",
+                        controller: _descriptionController),
+                    SpacerConstant.sizedBox16,
+                    InputField(
+                        formName: "Years of Experience",
+                        controller: _yearsOfExperienceController,
+                        keyboardType: TextInputType.number),
+                    SpacerConstant.sizedBox16,
+                    InputField(
+                        formName: "Skills", controller: _skillsController),
+                    SpacerConstant.sizedBox16,
+                    InputField(
+                        formName: "Achievements",
+                        controller: _achievementsController),
+                    SpacerConstant.sizedBox32,
+                    TextButton(
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          log("Form validated");
+                          final resume = ResumeModel(
+                            id: currentUserUID,
+                            role: _roleController.text.trim(),
+                            description: _descriptionController.text.trim(),
+                            yearsOfExperience: int.parse(
+                                _yearsOfExperienceController.text.trim()),
+                            skills: _skillsController.text.trim(),
+                            achievements: _achievementsController.text.trim(),
+                          );
+                          final updateSuccess = await ref
+                              .read(resumeServiceProvider)
+                              .updateResume(resume)
+                              .then((value) {
+                            if (value) {
+                              ToastManager().showToast(
+                                  context, "Resume updated successfully 🎉");
+                            }
+                          });
+                          log("Update success: $updateSuccess");
+                          ref.invalidate(getResumeFutureProvider);
+                          Navigator.pop(context);
+                        }
+                      },
+                      child: Text(
+                        "Save",
+                        style: Constant.underlineStyle(context),
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
+      error: (e, _) {
+        log(e.toString());
+        return ErrorView(
+          errorMessage: e.toString(),
+          providerClass: getResumeFutureProvider,
+        );
+      },
+      loading: () {
+        return const Center(child: CircularProgressIndicator());
+      },
     );
   }
 }

@@ -63,6 +63,9 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
       setIsLoading(true);
       final responseSession =
           await authenticator.loginWithEmailAndPassword(model);
+      
+      // Show success toast
+      ToastManager().showToast(context, "Logged in successfully 🥰");
       state = AuthState(
           session: responseSession,
           isLoading: false,
@@ -77,6 +80,8 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
       );
     } on AuthException catch (e) {
       log(e.message);
+      // Show success toast
+      ToastManager().showToast(context, e.message);
       state =
           AuthState(session: null, isLoading: false, result: AuthResult.error);
     } finally {

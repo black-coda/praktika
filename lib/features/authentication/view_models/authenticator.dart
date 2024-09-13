@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:myapp/app/controllers/bottom_navbar_controller/btn_nav_controller.dart';
 import 'package:myapp/features/authentication/controller/supabase_provider.dart';
 import 'package:myapp/features/authentication/model/auth_dto.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -16,6 +17,8 @@ class Authenticator {
       await supabaseClient.auth.signOut();
     } on AuthException {
       rethrow;
+    } finally {
+      ref.read(indexProvider.notifier).update((index) => index = 0);
     }
   }
 

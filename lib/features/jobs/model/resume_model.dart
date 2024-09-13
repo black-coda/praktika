@@ -17,6 +17,15 @@ class ResumeModel {
     required this.achievements,
   });
 
+
+  ResumeModel.defaultResume()
+      : id = "",
+        role = "",
+        description = "",
+        yearsOfExperience = 0,
+        skills = "",
+        achievements = "";
+
   ResumeModel copyWith({
     String? id,
     String? role,
@@ -51,7 +60,7 @@ class ResumeModel {
       id: map['id'] as String,
       role: map['role'] as String,
       description: map['description'] as String,
-      yearsOfExperience: map['yearsOfExperience'] as int,
+      yearsOfExperience: map['years_of_experience'] as int,
       skills: map['skills'] as String,
       achievements: map['achievements'] as String,
     );
