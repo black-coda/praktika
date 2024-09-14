@@ -41,6 +41,7 @@ class Constant {
   static const backgroundColorPurple = Color(0xffDCC1FF);
   static const backgroundColorYellow = Color(0xffF1EF76);
   static const backgroundColorOrange = Color(0xffEC704B);
+  static const backgroundColorGrey = Color(0xff2F2F2F);
 }
 
 class SpacerConstant {
