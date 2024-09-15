@@ -192,7 +192,7 @@ class DashboardEntryScreen extends ConsumerWidget {
                 ),
               );
             },
-            loading: () => const SliverToBoxAdapter(
+            loading: () => const SliverFillRemaining(
               child: Center(
                 child: CircularProgressIndicator(),
               ),
