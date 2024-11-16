@@ -162,6 +162,7 @@ class DashboardEntryScreen extends ConsumerWidget {
                           .reversed
                           .toList(),
                     ),
+                    const SizedBox(height: 100),
                   ],
                 ),
               );

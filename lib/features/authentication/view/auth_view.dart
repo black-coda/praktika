@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:myapp/features/authentication/controller/auth_controller.dart';
 import 'package:myapp/utils/constant/constant.dart';
 import 'package:myapp/utils/extension/extension.dart';
 import 'package:myapp/utils/router/router_manager.dart';
@@ -10,7 +11,7 @@ import 'package:myapp/utils/router/router_manager.dart';
 class AuthView extends ConsumerWidget {
   final bool isLogin;
 
-  const AuthView({super.key, required this.isLogin});
+  const AuthView({super.key,  this.isLogin = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -50,7 +51,10 @@ class AuthView extends ConsumerWidget {
             SpacerConstant.sizedBox24,
             AuthButtonWidget(
               () {
-                //TODO: Implement Google Auth
+                log("to google view", name: "AuthView");
+                final authenticator =
+                    ref.read(authStateNotifierProvider.notifier);
+                authenticator.signInWithGoogle(context);
               },
               isLogin: isLogin,
               icon: const FaIcon(FontAwesomeIcons.google),

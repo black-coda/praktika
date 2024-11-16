@@ -8,6 +8,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myapp/features/authentication/model/auth_result.dart';
+import 'package:myapp/features/authentication/view/auth_view.dart';
+import 'package:myapp/features/authentication/view/login_view.dart';
 import 'package:myapp/key.dart';
 import 'package:myapp/app/onboard/views/screen/onboard_entry_screen.dart';
 import 'package:myapp/utils/router/router_manager.dart';
@@ -18,7 +20,7 @@ import 'app/view/screens/dashboard_screen.dart';
 import 'features/authentication/controller/is_loading_provider.dart';
 import 'features/authentication/controller/is_logged_in_provider.dart';
 import 'features/authentication/controller/supabase_provider.dart';
-import 'features/authentication/view/logout_view.dart';
+import 'features/authentication/view/session_mgmt_view.dart';
 import 'utils/constant/constant.dart';
 import 'utils/loader/loading_screen_widget.dart';
 
@@ -42,7 +44,7 @@ class AppEntry extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Praktika',
       theme: ThemeData(
         scaffoldBackgroundColor: Constant.backgroundColorDark,
         textTheme: GoogleFonts.unboundedTextTheme(),
@@ -70,23 +72,29 @@ class AppEntry extends ConsumerWidget {
             },
           );
 
-          ref.listen<AuthResult?>(isSignedInProvider, (_, next) {
-            log(next.toString(), name: "isSignedInProvider");
+          // ref.listen<AuthResult?>(isSignedInProvider, (_, next) {
+          //   log(next.toString(), name: "isSignedInProvider");
 
-            log("🤗🤗🤗🤗 ${next == AuthResult.signedIn}",
-                name: "isSignedInProvider");
-            if (next == null) {
-              print("Error here 🚀🚀🚀🚀🚀");
-              Navigator.pushNamed(context, RouterManager.logoutRoute);
-            }
+          //   log("🤗🤗🤗🤗 ${next == AuthResult.signedIn}",
+          //       name: "isSignedInProvider");
 
-            if (next == AuthResult.signedIn) {
-              print("🚀🚀🚀🚀🚀");
-              Navigator.pushNamed(context, RouterManager.homeRoute);
-            }
-          });
+          //   if (next == null || next == AuthResult.signedOut) {
+          //     Navigator.pushNamed(context, RouterManager.logoutRoute);
+          //   }
 
-          return const App3();
+          //   if (next == AuthResult.signedIn) {
+          //     Navigator.pushNamed(context, RouterManager.homeRoute);
+          //   }
+          // });
+
+          // return const App3();
+          final AuthResult? isLoggedInState = ref.watch(isSignedInProvider);
+          log(isLoggedInState.toString(), name: "Check for login state");
+          if (isLoggedInState == AuthResult.signedIn) {
+            return const DashboardView();
+          } else {
+            return const AuthView(isLogin: true);
+          }
         },
       ),
       onGenerateRoute: MaterialRouteManager.generateRoute,
@@ -118,7 +126,6 @@ class _AppState extends ConsumerState<App> {
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
 
     _checkFirstTimeOpening();
-    ref.read(isLoggedInProvider);
   }
 
   @override
@@ -243,7 +250,7 @@ class _AppState extends ConsumerState<App> {
           log((authState.session == null).toString(), name: "App Entry");
           return const DashboardView();
         }
-        return const LogoutView();
+        return const SessionManagementView();
       },
       error: (error, stackTrace) {
         return Scaffold(
@@ -290,7 +297,6 @@ class _App3State extends ConsumerState<App3> {
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
 
     _checkFirstTimeOpening();
-    ref.read(isLoggedInProvider);
   }
 
   @override
@@ -379,12 +385,6 @@ class _App3State extends ConsumerState<App3> {
       return const OnboardEntryScreen();
     }
 
-    final isLoggedInState = ref.watch(isLoggedInProvider);
-    log(isLoggedInState.toString(), name: "Check for login state");
-    if (isLoggedInState) {
-      return const DashboardView();
-    } else {
-      return const LogoutView();
-    }
+    return const DashboardView();
   }
 }

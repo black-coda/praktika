@@ -20,14 +20,15 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'auth_result.dart';
 
+@immutable
 class AuthState {
   final Session? session;
   final bool isLoading;
   final AuthResult? result;
 
-  AuthState({this.session, required this.isLoading, this.result});
+  const AuthState({this.session, required this.isLoading, this.result});
 
-  AuthState.defaultState()
+  const AuthState.defaultState()
       : session = null,
         isLoading = false,
         result = null;
@@ -47,13 +48,53 @@ class AuthState {
 
 class AuthStateNotifier extends StateNotifier<AuthState> {
   AuthStateNotifier(this.authenticator, this.ref)
-      : super(AuthState.defaultState());
+      : super(
+          const AuthState.defaultState(),
+        ) {
+    if (authenticator.isLoggedIn) {
+      state = AuthState(
+        isLoading: false,
+        session: ref.read(supabaseProvider).auth.currentSession,
+        result: AuthResult.signedIn,
+      );
+    }
+  }
   final Ref ref;
 
   final Authenticator authenticator;
 
   void setIsLoading(bool isLoading) {
     state = state.copyWithForIsLoading(isLoading: isLoading);
+  }
+
+  Future<void> signInWithGoogle(BuildContext context) async {
+    try {
+      setIsLoading(true);
+      final responseSession = await authenticator.nativeGoogleSignIn();
+      // Show success toast
+      ToastManager().showToast(context, "Logged in successfully 🥰");
+      state = AuthState(
+          session: responseSession,
+          isLoading: false,
+          result: AuthResult.signedIn);
+      Navigator.of(context).pushAnimated(const DashboardView());
+    } on AuthException catch (e) {
+      log(e.message);
+      state = const AuthState(
+        session: null,
+        isLoading: false,
+        result: AuthResult.error,
+      );
+    } catch (e) {
+      log(e.toString());
+      state = const AuthState(
+        session: null,
+        isLoading: false,
+        result: AuthResult.error,
+      );
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   Future<void> loginWithEmailAndPassword(
@@ -63,7 +104,7 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
       setIsLoading(true);
       final responseSession =
           await authenticator.loginWithEmailAndPassword(model);
-      
+
       // Show success toast
       ToastManager().showToast(context, "Logged in successfully 🥰");
       state = AuthState(
@@ -73,7 +114,7 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
       log(state.session != null ? "Logged in" : "Not logged in");
     } on SocketException catch (e) {
       log(e.toString());
-      state = AuthState(
+      state = const AuthState(
         session: null,
         isLoading: false,
         result: AuthResult.error,
@@ -82,8 +123,8 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
       log(e.message);
       // Show success toast
       ToastManager().showToast(context, e.message);
-      state =
-          AuthState(session: null, isLoading: false, result: AuthResult.error);
+      state = const AuthState(
+          session: null, isLoading: false, result: AuthResult.error);
     } finally {
       setIsLoading(false);
     }
@@ -102,7 +143,7 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
       ToastManager().showToast(context, "Account created successfully 🥰");
 
       // Reset the state to default after successful registration
-      state = AuthState.defaultState();
+      state = const AuthState.defaultState();
 
       // Navigate to the LoginView and clear the navigation stack
       navigate.pushAndRemoveUntil(
@@ -117,7 +158,7 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
       ToastManager().showToast(context,
           "It seems like you are not connected to the internet.\nPlease check your connection and try again.");
 
-      state = AuthState(
+      state = const AuthState(
         session: null,
         isLoading: false,
         result: AuthResult.error,
@@ -126,7 +167,7 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
       log(e.message, name: "Registration AuthException");
       ToastManager().showToast(context, e.message);
 
-      state = AuthState(
+      state = const AuthState(
         session: null,
         isLoading: false,
         result: AuthResult.error,
@@ -140,8 +181,8 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
   Future<void> logout() async {
     try {
       setIsLoading(true);
-      state = AuthState.defaultState();
       await authenticator.logout();
+      state = const AuthState.defaultState();
     } on AuthException catch (e) {
       log(e.message);
     } finally {

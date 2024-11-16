@@ -85,6 +85,10 @@ class NotificationModel {
     ),
   ];
 
+  static void deleteNotification(int index){
+    notifications.removeAt(index);
+  }
+
 
   
 }

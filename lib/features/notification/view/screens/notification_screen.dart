@@ -48,9 +48,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
               itemBuilder: (context, index) {
                 final notification = NotificationModel.notifications[index];
                 return AnimatedScrollViewItem(
-                  child: Dismissible(
-                      key: Key(index.toString()),
-                      child: NotificationCardWidget(notification, index)),
+                  child: NotificationCardWidget(notification, index),
                 );
               },
               itemCount: NotificationModel.notifications.length,

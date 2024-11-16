@@ -1,36 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:myapp/app/view/screens/dashboard_screen.dart';
+import 'package:myapp/features/authentication/view/auth_view.dart';
 import 'package:myapp/features/authentication/view/login_view.dart';
-import 'package:myapp/features/authentication/view/logout_view.dart';
+import 'package:myapp/features/authentication/view/session_mgmt_view.dart';
 import 'package:myapp/features/authentication/view/register_view.dart';
 import 'package:myapp/features/user/view/profile_view.dart';
 import 'package:myapp/features/video/view/courses_view.dart';
 import 'package:myapp/features/video/view/search_filter_view.dart';
 
-final routerManagerProvider = Provider<GoRouter>(
-  (ref) {
-    return GoRouter(
-      routes: [
-        GoRoute(
-          path: RouterManager.loginRoute,
-          name: RouterManager.loginView,
-        ),
-        GoRoute(
-          path: RouterManager.homeRoute,
-          name: RouterManager.homeView,
-        ),
-        GoRoute(
-          path: RouterManager.onboardRoute,
-          name: RouterManager.onboardView,
-        ),
-      ],
-    );
-  },
-);
-
 class RouterManager {
+  static const String authView = 'auth';
+  static const String authRoute = '/auth';
   static const String loginView = 'login';
   static const String loginRoute = '/login';
   static const String homeView = 'home';
@@ -54,6 +34,10 @@ class RouterManager {
 class MaterialRouteManager {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case RouterManager.authRoute:
+        return MaterialPageRoute(
+          builder: (context) => const AuthView(),
+        );
       case RouterManager.loginRoute:
         return MaterialPageRoute(
           builder: (context) => const LoginView(),
@@ -84,7 +68,7 @@ class MaterialRouteManager {
         );
       case RouterManager.logoutView:
         return MaterialPageRoute(
-          builder: (context) => const LogoutView(),
+          builder: (context) => const SessionManagementView(),
         );
 
       default:

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Constant {
+  const Constant._();
   static const String profileTable = 'profiles';
   static const String videoTable = 'videos';
   static const String reviewTable = "reviews";
@@ -12,7 +13,7 @@ class Constant {
       EdgeInsets.symmetric(vertical: 32, horizontal: 16);
 
   static const lottieNoInternet = "assets/no_internet.json";
-  
+
   static const lottieNoData = "assets/empty.json";
 
   static const defaultProfileImage =

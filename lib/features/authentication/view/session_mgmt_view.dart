@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:myapp/utils/constant/constant.dart';
-import 'package:myapp/utils/router/router_manager.dart';
 
-class LogoutView extends StatelessWidget {
-  const LogoutView({super.key});
+import 'auth_view.dart';
+
+class SessionManagementView extends StatelessWidget {
+  const SessionManagementView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,14 @@ class LogoutView extends StatelessWidget {
               LogoutButtonWidget(
                 text: "Sign in",
                 onPressed: () {
-                  Navigator.pushNamed(context, RouterManager.loginRoute);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return const AuthView(isLogin: true);
+                      },
+                    ),
+                  );
                 },
               ),
               SpacerConstant.sizedBox24,
@@ -44,7 +52,14 @@ class LogoutView extends StatelessWidget {
                 text: "Sign up",
                 isWhite: true,
                 onPressed: () {
-                  Navigator.pushNamed(context, RouterManager.registerRoute);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return const AuthView(isLogin: false);
+                      },
+                    ),
+                  );
                 },
               ),
             ]
